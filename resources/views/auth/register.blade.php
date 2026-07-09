@@ -21,6 +21,20 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
+        <!-- Department -->
+        <div class="mt-4">
+            <x-input-label for="department" :value="__('Department')" class="text-sm" />
+            <x-text-input id="department" class="block mt-1 w-full text-sm" type="text" name="department" :value="old('department')" required autocomplete="off" placeholder="e.g. Computer Science" />
+            <x-input-error :messages="$errors->get('department')" class="mt-2" />
+        </div>
+
+        <!-- Batch -->
+        <div class="mt-4">
+            <x-input-label for="batch" :value="__('Batch')" class="text-sm" />
+            <x-text-input id="batch" class="block mt-1 w-full text-sm" type="text" name="batch" :value="old('batch')" required autocomplete="off" placeholder="e.g. 2024" />
+            <x-input-error :messages="$errors->get('batch')" class="mt-2" />
+        </div>
+
         <!-- Password -->
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" class="text-sm" />
