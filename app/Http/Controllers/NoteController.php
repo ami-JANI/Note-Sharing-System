@@ -16,6 +16,7 @@ class NoteController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'file' => ['required', 'file', 'mimes:pdf,doc,docx,ppt,pptx', 'max:10240'],
+            'credit_price' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $path = $request->file('file')->store('notes', 'public');
@@ -26,6 +27,7 @@ class NoteController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'file_path' => $path,
+            'credit_price' => $validated['credit_price'] ?? 0,
         ]);
 
         return back()->with('status', 'Note uploaded.');
