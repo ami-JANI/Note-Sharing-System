@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
 
@@ -45,6 +45,45 @@
                     @endif
                 </div>
             @endif
+        </div>
+
+        <div>
+            <x-input-label for="photo" :value="__('Profile Photo')" />
+            <div class="mt-1 flex items-center gap-4">
+                @if ($user->photo ?? null)
+                    <img src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->name }}" class="w-16 h-16 rounded-full object-cover border border-gray-200">
+                @else
+                    <div class="w-16 h-16 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xl border border-gray-200">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+                @endif
+                <div>
+                    <input type="file" name="photo" id="photo" accept="image/*"
+                           class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-600 hover:file:bg-indigo-100">
+                    <p class="text-xs text-gray-400 mt-1">JPG, PNG. Max 2MB.</p>
+                </div>
+            </div>
+            <x-input-error class="mt-2" :messages="$errors->get('photo')" />
+        </div>
+
+        <div>
+            <x-input-label for="roll" :value="__('Roll Number')" />
+            <x-text-input id="roll" name="roll" type="text" class="mt-1 block w-full" :value="old('roll', $user->roll)" placeholder="e.g. CS-2024-015" autocomplete="off" />
+            <x-input-error class="mt-2" :messages="$errors->get('roll')" />
+        </div>
+
+        <div>
+            <x-input-label for="current_semester" :value="__('Current Semester')" />
+            <select id="current_semester" name="current_semester"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                <option value="">Select semester</option>
+                @foreach ($semesters as $semester)
+                    <option value="{{ $semester->id }}" {{ old('current_semester', $user->current_semester) == $semester->id ? 'selected' : '' }}>
+                        {{ $semester->name }}
+                    </option>
+                @endforeach
+            </select>
+            <x-input-error class="mt-2" :messages="$errors->get('current_semester')" />
         </div>
 
         <div class="flex items-center gap-4">
