@@ -25,7 +25,7 @@
             {{-- Header --}}
             <header style="background: rgba(251, 248, 243, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(27, 42, 74, 0.1);">
                 <nav style="max-width: 1200px; margin: 0 auto; padding: 18px 40px; display: flex; align-items: center; justify-content: space-between;">
-                    <a href="{{ route('welcome') ?? '/' }}" style="display: flex; align-items: center; gap: 11px; color: rgb(27, 42, 74);">
+                    <a href="{{ route('welcome') }}" style="display: flex; align-items: center; gap: 11px; color: rgb(27, 42, 74);">
                         <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: rgb(138, 28, 36); color: rgb(251, 248, 243); border-radius: 7px; font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 19px;">U</span>
                         <span style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em;">UniNotes</span>
                     </a>
