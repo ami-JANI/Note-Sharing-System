@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\NoteController as AdminNoteController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NoteController;
@@ -33,6 +35,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/credits/buy', [CreditController::class, 'create'])->name('credits.buy');
     Route::post('/credits/purchase', [CreditController::class, 'purchase'])->name('credits.purchase');
     Route::get('/credits/history', [CreditController::class, 'history'])->name('credits.history');
+
+    Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/notes/pending', [AdminNoteController::class, 'pending'])->name('notes.pending');
+        Route::post('/notes/{note}/approve', [AdminNoteController::class, 'approve'])->name('notes.approve');
+        Route::post('/notes/{note}/reject', [AdminNoteController::class, 'reject'])->name('notes.reject');
+
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users');
+        Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
+        Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend');
+    });
 });
 
 Route::get('/users/{user}', [PublicProfileController::class, 'show'])->name('profiles.show');

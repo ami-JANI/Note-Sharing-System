@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Note extends Model
 {
-    protected $fillable = ['subject_id', 'uploader_id', 'title', 'description', 'file_path', 'credit_price'];
+    protected $fillable = ['subject_id', 'uploader_id', 'title', 'description', 'file_path', 'credit_price', 'status'];
 
     public function subject()
     {

@@ -45,7 +45,7 @@ class NoteUploadTest extends TestCase
             'file' => $file,
         ]);
 
-        $response->assertSessionHas('status', 'Note uploaded.');
+        $response->assertSessionHas('status', 'Note uploaded and awaiting admin approval.');
         $response->assertRedirect();
 
         $this->assertDatabaseHas('notes', [
@@ -56,7 +56,7 @@ class NoteUploadTest extends TestCase
         ]);
     }
 
-    public function test_uploaded_note_appears_on_subject_page(): void
+    public function test_uploaded_note_is_hidden_until_admin_approves(): void
     {
         Storage::fake('public');
 
@@ -69,11 +69,15 @@ class NoteUploadTest extends TestCase
             'file' => $file,
         ]);
 
-        $response = $this->actingAs($this->user)->get(route('subjects.show', $this->subject));
+        $hidden = $this->actingAs($this->user)->get(route('subjects.show', $this->subject));
+        $hidden->assertDontSee('Data Structures Review');
 
-        $response->assertOk();
-        $response->assertSee('Data Structures Review');
-        $response->assertSee(route('notes.download', Note::first()));
+        Note::first()->update(['status' => 'approved']);
+
+        $visible = $this->actingAs($this->user)->get(route('subjects.show', $this->subject));
+        $visible->assertOk();
+        $visible->assertSee('Data Structures Review');
+        $visible->assertSee(route('notes.download', Note::first()));
     }
 
     public function test_authenticated_user_can_download_a_note(): void

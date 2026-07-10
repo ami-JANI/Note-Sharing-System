@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function getIsSuspendedAttribute(): bool
+    {
+        return $this->status === 'suspended';
+    }
+
     public function notes()
     {
         return $this->hasMany(Note::class, 'uploader_id');
