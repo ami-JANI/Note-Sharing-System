@@ -74,19 +74,39 @@
                                                 </svg>
                                             </div>
                                             <div class="min-w-0">
-                                                <div class="font-medium text-gray-800 truncate">{{ $note->title }}</div>
+                                                <div class="font-medium text-gray-800 truncate flex items-center gap-2">
+                                                    {{ $note->title }}
+                                                    @if ($note->credit_price > 0)
+                                                        <span class="shrink-0 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-amber-100 text-amber-800">
+                                                            {{ $note->credit_price }} cr
+                                                        </span>
+                                                    @endif
+                                                </div>
                                                 <div class="text-xs text-gray-500">
                                                     <a href="{{ route('profiles.show', $note->uploader) }}" class="hover:text-indigo-600 transition">{{ $note->uploader->name }}</a> &middot; {{ $note->created_at->format('M d, Y') }}
                                                 </div>
                                             </div>
                                         </div>
-                                        <a href="{{ route('notes.download', $note) }}"
-                                           class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition">
-                                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                            </svg>
-                                            Download
-                                        </a>
+                                        @if ($note->credit_price > 0 && !($note->is_unlocked ?? false))
+                                            <form method="POST" action="{{ route('credits.unlock', $note) }}" class="shrink-0">
+                                                @csrf
+                                                <button type="submit"
+                                                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 rounded-lg hover:bg-amber-100 transition border border-amber-200">
+                                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+                                                    </svg>
+                                                    Unlock for {{ $note->credit_price }} credits
+                                                </button>
+                                            </form>
+                                        @else
+                                            <a href="{{ route('notes.download', $note) }}"
+                                               class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition">
+                                                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                </svg>
+                                                Download
+                                            </a>
+                                        @endif
                                     </li>
                                 @endforeach
                             </ul>
