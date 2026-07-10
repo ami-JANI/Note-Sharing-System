@@ -1,23 +1,26 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Credit History
-        </h2>
+        <div>
+            <h2 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 28px; color: rgb(27, 42, 74); letter-spacing: -0.02em;">
+                Credit History
+            </h2>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div style="padding: 48px 0;">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="max-width: 720px; margin: 0 auto;">
 
             {{-- Balance Summary --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
-                <div class="flex items-center justify-between">
+            <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 28px; margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
                     <div>
-                        <h3 class="text-sm font-medium text-gray-500">Current Balance</h3>
-                        <p class="text-3xl font-bold text-gray-900 mt-1">{{ number_format(Auth::user()->credits ?? 0) }} <span class="text-base font-medium text-gray-500">credits</span></p>
+                        <p style="font-size: 14px; color: rgb(91, 104, 133);">Current Balance</p>
+                        <p style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 32px; color: rgb(27, 42, 74); margin-top: 4px;">{{ number_format(Auth::user()->credits ?? 0) }} <span style="font-size: 15px; font-weight: 500; color: rgb(91, 104, 133);">credits</span></p>
                     </div>
                     <a href="{{ route('credits.buy') }}"
-                       class="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 transition">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                       style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: rgb(138, 28, 36); color: rgb(251, 248, 243); border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none; transition: background 0.15s;"
+                       onmouseover="this.style.background='rgb(110, 20, 27)'" onmouseout="this.style.background='rgb(138, 28, 36)'">
+                        <svg style="width: 16px; height: 16px;" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                         Buy Credits
@@ -26,67 +29,65 @@
             </div>
 
             {{-- Transaction Table --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Transactions</h3>
+            <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 28px;">
+                <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 20px; color: rgb(27, 42, 74); margin-bottom: 20px;">Transactions</h3>
 
-                    @if ($transactions->isEmpty())
-                        <div class="text-center py-12">
-                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                            </svg>
-                            <h3 class="mt-3 text-sm font-semibold text-gray-900">No transactions yet</h3>
-                            <p class="mt-1 text-sm text-gray-500">Your credit history will appear here.</p>
-                        </div>
-                    @else
-                        <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-50">
-                                    <tr>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
-                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                @if ($transactions->isEmpty())
+                    <div style="text-align: center; padding: 48px 0;">
+                        <svg style="margin: 0 auto; width: 48px; height: 48px; color: rgb(91, 104, 133);" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                        </svg>
+                        <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 18px; color: rgb(27, 42, 74); margin-top: 16px;">No transactions yet</h3>
+                        <p style="font-size: 14px; color: rgb(91, 104, 133); margin-top: 6px;">Your credit history will appear here.</p>
+                    </div>
+                @else
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(27, 42, 74, 0.08);">
+                                    <th style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: rgb(91, 104, 133); text-transform: uppercase; letter-spacing: 0.05em;">Date</th>
+                                    <th style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: rgb(91, 104, 133); text-transform: uppercase; letter-spacing: 0.05em;">Type</th>
+                                    <th style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: rgb(91, 104, 133); text-transform: uppercase; letter-spacing: 0.05em;">Description</th>
+                                    <th style="padding: 12px 16px; text-align: right; font-size: 12px; font-weight: 600; color: rgb(91, 104, 133); text-transform: uppercase; letter-spacing: 0.05em;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($transactions as $transaction)
+                                    <tr style="border-bottom: 1px solid rgba(27, 42, 74, 0.06);">
+                                        <td style="padding: 14px 16px; font-size: 14px; color: rgb(91, 104, 133);">
+                                            {{ $transaction->created_at->format('M d, Y') }}
+                                        </td>
+                                        <td style="padding: 14px 16px;">
+                                            @if ($transaction->type === 'purchase' || $transaction->type === 'earned')
+                                                <span style="display: inline-flex; padding: 3px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; background: rgba(46, 125, 79, 0.08); color: rgb(46, 125, 79);">
+                                                    Credit
+                                                </span>
+                                            @elseif ($transaction->type === 'unlock' || $transaction->type === 'spent')
+                                                <span style="display: inline-flex; padding: 3px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; background: rgba(180, 30, 30, 0.06); color: rgb(180, 30, 30);">
+                                                    Debit
+                                                </span>
+                                            @else
+                                                <span style="display: inline-flex; padding: 3px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; background: rgba(27, 42, 74, 0.06); color: rgb(91, 104, 133);">
+                                                    {{ ucfirst($transaction->type) }}
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td style="padding: 14px 16px; font-size: 14px; color: rgb(27, 42, 74);">
+                                            {{ $transaction->description ?? '—' }}
+                                        </td>
+                                        <td style="padding: 14px 16px; text-align: right; font-size: 14px; font-weight: 600;">
+                                            @if (in_array($transaction->type, ['purchase', 'earned']))
+                                                <span style="color: rgb(46, 125, 79);">+{{ $transaction->amount }}</span>
+                                            @else
+                                                <span style="color: rgb(180, 30, 30);">-{{ $transaction->amount }}</span>
+                                            @endif
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach ($transactions as $transaction)
-                                        <tr class="hover:bg-gray-50">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                {{ $transaction->created_at->format('M d, Y') }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                @if ($transaction->type === 'purchase' || $transaction->type === 'earned')
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                                        Credit
-                                                    </span>
-                                                @elseif ($transaction->type === 'unlock' || $transaction->type === 'spent')
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                                        Debit
-                                                    </span>
-                                                @else
-                                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                                        {{ ucfirst($transaction->type) }}
-                                                    </span>
-                                                @endif
-                                            </td>
-                                            <td class="px-6 py-4 text-sm text-gray-700">
-                                                {{ $transaction->description ?? '—' }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                @if (in_array($transaction->type, ['purchase', 'earned']))
-                                                    <span class="text-green-600">+{{ $transaction->amount }}</span>
-                                                @else
-                                                    <span class="text-red-600">-{{ $transaction->amount }}</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @endif
-                </div>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

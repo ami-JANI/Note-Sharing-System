@@ -5,22 +5,28 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'UniNotes') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=public-sans:400,500,600,700|source-serif-4:400,500,600,700&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <style>
+            body { background: #FBF8F3; }
+            body, .font-sans { font-family: "Public Sans", system-ui, sans-serif; }
+            h1, h2, h3, .font-serif { font-family: "Source Serif 4", serif; }
+        </style>
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+    <body class="antialiased" style="background: #FBF8F3; color: rgb(27, 42, 74);">
+        <div class="min-h-screen" style="background: #FBF8F3;">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white shadow">
+                <header style="background: rgba(27, 42, 74, 0.04); border-bottom: 1px solid rgba(27, 42, 74, 0.08);">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>

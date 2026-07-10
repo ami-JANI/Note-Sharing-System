@@ -1,36 +1,38 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $user->name }}'s Profile
-        </h2>
+        <div>
+            <h2 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 28px; color: rgb(27, 42, 74); letter-spacing: -0.02em;">
+                {{ $user->name }}'s Profile
+            </h2>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div style="padding: 48px 0;">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="max-width: 800px; margin: 0 auto;">
 
             {{-- Profile Card --}}
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 mb-6">
-                <div class="flex items-start gap-6">
+            <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 32px; margin-bottom: 28px;">
+                <div style="display: flex; align-items: flex-start; gap: 24px;">
                     @if ($user->photo ?? null)
-                        <img src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->name }}" class="w-24 h-24 rounded-full object-cover border-2 border-gray-200">
+                        <img src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->name }}" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(27, 42, 74, 0.1); flex-shrink: 0;">
                     @else
-                        <div class="w-24 h-24 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-3xl border-2 border-gray-200 shrink-0">
+                        <div style="width: 96px; height: 96px; border-radius: 50%; background: rgba(138, 28, 36, 0.09); color: rgb(138, 28, 36); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 36px; font-family: 'Source Serif 4', serif; border: 2px solid rgba(27, 42, 74, 0.1); flex-shrink: 0;">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
                         </div>
                     @endif
-                    <div class="min-w-0">
-                        <h3 class="text-xl font-bold text-gray-900">{{ $user->name }}</h3>
+                    <div style="min-width: 0;">
+                        <h3 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 24px; color: rgb(27, 42, 74);">{{ $user->name }}</h3>
                         @if ($user->roll ?? null)
-                            <p class="text-sm text-gray-500 mt-1">Roll: {{ $user->roll }}</p>
+                            <p style="font-size: 14px; color: rgb(91, 104, 133); margin-top: 4px;">Roll: {{ $user->roll }}</p>
                         @endif
                         @if ($user->current_semester ?? null)
-                            <p class="text-sm text-gray-500">{{ $user->current_semester->name ?? 'Semester ' . $user->current_semester }}</p>
+                            <p style="font-size: 14px; color: rgb(91, 104, 133);">{{ $user->current_semester->name ?? 'Semester ' . $user->current_semester }}</p>
                         @endif
-                        <div class="flex items-center gap-4 mt-3">
-                            <span class="text-sm text-gray-500">
-                                <span class="font-semibold text-gray-800">{{ $user->notes()->count() }}</span> notes uploaded
+                        <div style="display: flex; align-items: center; gap: 16px; margin-top: 12px;">
+                            <span style="font-size: 14px; color: rgb(91, 104, 133);">
+                                <span style="font-weight: 700; color: rgb(27, 42, 74);">{{ $user->notes()->count() }}</span> notes uploaded
                             </span>
-                            <span class="text-sm text-gray-500">
+                            <span style="font-size: 14px; color: rgb(91, 104, 133);">
                                 No ratings yet
                             </span>
                         </div>
@@ -39,37 +41,39 @@
             </div>
 
             {{-- Uploaded Notes --}}
-            <div class="mb-6">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Uploaded Notes</h3>
+            <div>
+                <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 20px; color: rgb(27, 42, 74); margin-bottom: 16px;">Uploaded Notes</h3>
 
                 @if ($notes->isEmpty())
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-12 text-center">
-                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 64px 32px; text-align: center;">
+                        <svg style="margin: 0 auto; width: 48px; height: 48px; color: rgb(91, 104, 133);" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                         </svg>
-                        <h3 class="mt-3 text-sm font-semibold text-gray-900">No notes yet</h3>
-                        <p class="mt-1 text-sm text-gray-500">This user hasn't uploaded any notes yet.</p>
+                        <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 18px; color: rgb(27, 42, 74); margin-top: 16px;">No notes yet</h3>
+                        <p style="font-size: 14px; color: rgb(91, 104, 133); margin-top: 6px;">This user hasn't uploaded any notes yet.</p>
                     </div>
                 @else
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;">
                         @foreach ($notes as $note)
                             <a href="{{ route('subjects.show', $note->subject) }}"
-                               class="group block bg-white overflow-hidden shadow-sm sm:rounded-lg p-5 hover:shadow-md hover:border-indigo-300 border border-transparent transition-all duration-200">
-                                <div class="flex items-center gap-3 mb-3">
-                                    <div class="w-9 h-9 bg-indigo-50 text-indigo-600 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-indigo-100 transition">
-                                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                               style="display: block; background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 15px; padding: 22px; color: rgb(27, 42, 74); text-decoration: none; transition: box-shadow 0.2s, border-color 0.2s;"
+                               onmouseover="this.style.boxShadow='0 8px 30px -8px rgba(27, 42, 74, 0.15)'; this.style.borderColor='rgba(138, 28, 36, 0.3)'"
+                               onmouseout="this.style.boxShadow='none'; this.style.borderColor='rgba(27, 42, 74, 0.1)'">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                                    <div style="width: 36px; height: 36px; background: rgba(138, 28, 36, 0.06); color: rgb(138, 28, 36); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        <svg style="width: 15px; height: 15px;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                         </svg>
                                     </div>
-                                    <div class="min-w-0">
-                                        <div class="font-medium text-gray-800 truncate group-hover:text-indigo-600 transition">{{ $note->title }}</div>
-                                        <div class="text-xs text-gray-500">{{ $note->subject->code }}</div>
+                                    <div style="min-width: 0;">
+                                        <div style="font-weight: 600; font-size: 14px; color: rgb(27, 42, 74); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $note->title }}</div>
+                                        <div style="font-size: 12px; color: rgb(91, 104, 133);">{{ $note->subject->code }}</div>
                                     </div>
                                 </div>
                                 @if ($note->description)
-                                    <p class="text-sm text-gray-500 line-clamp-2 mb-2">{{ $note->description }}</p>
+                                    <p style="font-size: 13px; color: rgb(91, 104, 133); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 8px;">{{ $note->description }}</p>
                                 @endif
-                                <div class="text-xs text-gray-400">{{ $note->created_at->format('M d, Y') }}</div>
+                                <div style="font-size: 12px; color: rgb(138, 150, 174);">{{ $note->created_at->format('M d, Y') }}</div>
                             </a>
                         @endforeach
                     </div>
