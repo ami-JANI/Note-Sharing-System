@@ -22,4 +22,17 @@ class Note extends Model
     {
         return $this->hasMany(NotePurchase::class);
     }
+
+    public function isUnlockedBy(?User $user): bool
+    {
+        if (! $user) {
+            return false;
+        }
+
+        if ($this->credit_price <= 0 || $this->uploader_id === $user->id) {
+            return true;
+        }
+
+        return $this->purchases()->where('user_id', $user->id)->exists();
+    }
 }

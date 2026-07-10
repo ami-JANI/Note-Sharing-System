@@ -87,8 +87,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        @if ($note->credit_price > 0 && !($note->is_unlocked ?? false))
-                                            <form method="POST" action="{{ route('credits.unlock', $note) }}" class="shrink-0">
+                                        @if ($note->credit_price > 0 && !$note->isUnlockedBy(auth()->user()))
+                                            <form method="POST" action="{{ route('notes.unlock', $note) }}" class="shrink-0">
                                                 @csrf
                                                 <button type="submit"
                                                         class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 rounded-lg hover:bg-amber-100 transition border border-amber-200">
