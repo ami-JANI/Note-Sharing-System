@@ -25,6 +25,11 @@ class User extends Authenticatable
         'role',
         'department',
         'batch',
+        'credits',
+        'status',
+        'photo',
+        'roll',
+        'current_semester_id',
     ];
 
     /**
@@ -63,5 +68,20 @@ class User extends Authenticatable
     public function previousQuestions()
     {
         return $this->hasMany(PreviousQuestion::class, 'uploader_id');
+    }
+
+    public function currentSemester()
+    {
+        return $this->belongsTo(Semester::class, 'current_semester_id');
+    }
+
+    public function purchases()
+    {
+        return $this->hasMany(NotePurchase::class);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\NotePurchase;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +17,7 @@ class NoteController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'file' => ['required', 'file', 'mimes:pdf,doc,docx,ppt,pptx', 'max:10240'],
+            'credit_price' => ['nullable', 'integer', 'min:0'],
         ]);
 
         $path = $request->file('file')->store('notes', 'public');
@@ -26,6 +28,7 @@ class NoteController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'file_path' => $path,
+            'credit_price' => $validated['credit_price'] ?? 0,
         ]);
 
         return back()->with('status', 'Note uploaded.');
@@ -33,6 +36,48 @@ class NoteController extends Controller
 
     public function download(Note $note)
     {
+        $user = auth()->user();
+
+        if ($note->credit_price > 0
+            && $note->uploader_id !== $user->id
+            && ! NotePurchase::where('note_id', $note->id)->where('user_id', $user->id)->exists()
+        ) {
+            return back()->withErrors(['note' => 'You must unlock this note first.']);
+        }
+
         return Storage::disk('public')->download($note->file_path, $note->title);
+    }
+
+    public function unlock(Request $request, Note $note)
+    {
+        $user = $request->user();
+
+        if ($note->credit_price <= 0) {
+            return back()->withErrors(['note' => 'This note is already free.']);
+        }
+
+        if ($note->uploader_id === $user->id) {
+            return back()->withErrors(['note' => 'You cannot unlock your own note.']);
+        }
+
+        if (NotePurchase::where('note_id', $note->id)->where('user_id', $user->id)->exists()) {
+            return back()->withErrors(['note' => 'You have already unlocked this note.']);
+        }
+
+        if ($user->credits < $note->credit_price) {
+            return back()->withErrors(['credits' => 'Insufficient credits. Please purchase more.']);
+        }
+
+        $user->decrement('credits', $note->credit_price);
+
+        $note->uploader->increment('credits', (int) round($note->credit_price * 0.1));
+
+        NotePurchase::create([
+            'note_id' => $note->id,
+            'user_id' => $user->id,
+            'credits_spent' => $note->credit_price,
+        ]);
+
+        return back()->with('status', 'Note unlocked.');
     }
 }

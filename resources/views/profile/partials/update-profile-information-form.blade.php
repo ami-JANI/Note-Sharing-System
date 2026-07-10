@@ -79,17 +79,17 @@
         </div>
 
         <div>
-            <label for="current_semester" style="display: block; font-size: 14px; font-weight: 500; color: rgb(27, 42, 74); margin-bottom: 6px;">{{ __('Current Semester') }}</label>
-            <select id="current_semester" name="current_semester"
+            <label for="current_semester_id" style="display: block; font-size: 14px; font-weight: 500; color: rgb(27, 42, 74); margin-bottom: 6px;">{{ __('Current Semester') }}</label>
+            <select id="current_semester_id" name="current_semester_id"
                     style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(27, 42, 74); background: white; outline: none;">
                 <option value="">Select semester</option>
                 @foreach ($semesters as $semester)
-                    <option value="{{ $semester->id }}" {{ old('current_semester', $user->current_semester) == $semester->id ? 'selected' : '' }}>
+                    <option value="{{ $semester->id }}" {{ old('current_semester_id', $user->current_semester_id) == $semester->id ? 'selected' : '' }}>
                         {{ $semester->name }}
                     </option>
                 @endforeach
             </select>
-            <x-input-error class="mt-2" :messages="$errors->get('current_semester')" />
+            <x-input-error class="mt-2" :messages="$errors->get('current_semester_id')" />
         </div>
 
         <div style="display: flex; align-items: center; gap: 16px; margin-top: 8px;">

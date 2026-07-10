@@ -13,8 +13,8 @@
             {{-- Profile Card --}}
             <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 32px; margin-bottom: 28px;">
                 <div style="display: flex; align-items: flex-start; gap: 24px;">
-                    @if ($user->photo ?? null)
-                        <img src="{{ asset('storage/' . $user->photo) }}" alt="{{ $user->name }}" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(27, 42, 74, 0.1); flex-shrink: 0;">
+                    @if ($user->photo)
+                        <img src="{{ Storage::url($user->photo) }}" alt="{{ $user->name }}" style="width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(27, 42, 74, 0.1); flex-shrink: 0;">
                     @else
                         <div style="width: 96px; height: 96px; border-radius: 50%; background: rgba(138, 28, 36, 0.09); color: rgb(138, 28, 36); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 36px; font-family: 'Source Serif 4', serif; border: 2px solid rgba(27, 42, 74, 0.1); flex-shrink: 0;">
                             {{ strtoupper(substr($user->name, 0, 1)) }}
@@ -22,18 +22,21 @@
                     @endif
                     <div style="min-width: 0;">
                         <h3 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 24px; color: rgb(27, 42, 74);">{{ $user->name }}</h3>
-                        @if ($user->roll ?? null)
+                        @if ($user->roll)
                             <p style="font-size: 14px; color: rgb(91, 104, 133); margin-top: 4px;">Roll: {{ $user->roll }}</p>
                         @endif
-                        @if ($user->current_semester ?? null)
-                            <p style="font-size: 14px; color: rgb(91, 104, 133);">{{ $user->current_semester->name ?? 'Semester ' . $user->current_semester }}</p>
+                        @if ($user->currentSemester)
+                            <p style="font-size: 14px; color: rgb(91, 104, 133);">{{ $user->currentSemester->name }}</p>
+                        @endif
+                        @if ($user->department)
+                            <p style="font-size: 14px; color: rgb(91, 104, 133);">{{ $user->department }}</p>
                         @endif
                         <div style="display: flex; align-items: center; gap: 16px; margin-top: 12px;">
                             <span style="font-size: 14px; color: rgb(91, 104, 133);">
-                                <span style="font-weight: 700; color: rgb(27, 42, 74);">{{ $user->notes()->count() }}</span> notes uploaded
+                                <span style="font-weight: 700; color: rgb(27, 42, 74);">{{ $notes->count() }}</span> notes uploaded
                             </span>
                             <span style="font-size: 14px; color: rgb(91, 104, 133);">
-                                No ratings yet
+                                Rating: {{ number_format($averageRating, 1) }}/5
                             </span>
                         </div>
                     </div>

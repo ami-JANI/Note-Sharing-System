@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PreviousQuestionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PublicProfileController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +21,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
     Route::get('/notes/{note}/download', [NoteController::class, 'download'])->name('notes.download');
+    Route::post('/notes/{note}/unlock', [NoteController::class, 'unlock'])->name('notes.unlock');
 
     Route::post('/previous-questions', [PreviousQuestionController::class, 'store'])->name('previous-questions.store');
     Route::get('/previous-questions/{previousQuestion}/download', [PreviousQuestionController::class, 'download'])->name('previous-questions.download');
@@ -26,6 +29,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/credits/buy', [CreditController::class, 'create'])->name('credits.buy');
+    Route::post('/credits/purchase', [CreditController::class, 'purchase'])->name('credits.purchase');
+    Route::get('/credits/history', [CreditController::class, 'history'])->name('credits.history');
 });
+
+Route::get('/users/{user}', [PublicProfileController::class, 'show'])->name('profiles.show');
 
 require __DIR__.'/auth.php';
