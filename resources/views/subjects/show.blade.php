@@ -76,7 +76,7 @@
                                             <div class="min-w-0">
                                                 <div class="font-medium text-gray-800 truncate">{{ $note->title }}</div>
                                                 <div class="text-xs text-gray-500">
-                                                    {{ $note->uploader->name }} &middot; {{ $note->created_at->format('M d, Y') }}
+                                                    <a href="{{ route('profiles.show', $note->uploader) }}" class="hover:text-indigo-600 transition">{{ $note->uploader->name }}</a> &middot; {{ $note->created_at->format('M d, Y') }}
                                                 </div>
                                             </div>
                                         </div>
@@ -102,6 +102,11 @@
                                        class="border-gray-300 rounded-md shadow-sm w-full text-sm focus:ring-indigo-500 focus:border-indigo-500">
                                 <textarea name="description" placeholder="Description (optional)" rows="2"
                                           class="border-gray-300 rounded-md shadow-sm w-full text-sm focus:ring-indigo-500 focus:border-indigo-500 resize-none"></textarea>
+                                <div>
+                                    <label class="block text-xs font-medium text-gray-700 mb-1">Credit price (0 = free)</label>
+                                    <input type="number" name="credit_price" value="0" min="0"
+                                           class="border-gray-300 rounded-md shadow-sm w-full text-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                </div>
                                 <div class="flex items-center gap-3">
                                     <label class="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition cursor-pointer">
                                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -148,7 +153,7 @@
                                             <div class="min-w-0">
                                                 <div class="font-medium text-gray-800">{{ $pq->year }}</div>
                                                 <div class="text-xs text-gray-500">
-                                                    {{ $pq->uploader->name }} &middot; {{ $pq->created_at->format('M d, Y') }}
+                                                    <a href="{{ route('profiles.show', $pq->uploader) }}" class="hover:text-indigo-600 transition">{{ $pq->uploader->name }}</a> &middot; {{ $pq->created_at->format('M d, Y') }}
                                                 </div>
                                             </div>
                                         </div>
