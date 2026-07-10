@@ -29,9 +29,10 @@ class NoteController extends Controller
             'description' => $validated['description'] ?? null,
             'file_path' => $path,
             'credit_price' => $validated['credit_price'] ?? 0,
+            'status' => 'pending',
         ]);
 
-        return back()->with('status', 'Note uploaded.');
+        return back()->with('status', 'Note uploaded and awaiting admin approval.');
     }
 
     public function download(Note $note)
