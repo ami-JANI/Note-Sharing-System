@@ -25,4 +25,31 @@ class CreditController extends Controller
 
         return back()->with('status', 'Credits purchased.');
     }
+
+    public function history(Request $request)
+    {
+        $user = $request->user();
+
+        $purchases = $user->purchases()->with('note')->latest()->get()->map(function ($p) {
+            return [
+                'type' => 'spend',
+                'amount' => -$p->credits_spent,
+                'description' => 'Unlocked: ' . ($p->note->title ?? 'Unknown'),
+                'date' => $p->created_at,
+            ];
+        });
+
+        $payments = $user->payments()->latest()->get()->map(function ($p) {
+            return [
+                'type' => 'buy',
+                'amount' => $p->credits_purchased,
+                'description' => 'Purchased credits',
+                'date' => $p->created_at,
+            ];
+        });
+
+        $transactions = $purchases->concat($payments)->sortByDesc('date')->values();
+
+        return view('credits.history', compact('transactions'));
+    }
 }
