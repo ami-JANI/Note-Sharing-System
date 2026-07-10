@@ -8,7 +8,7 @@ class SubjectController extends Controller
 {
     public function show(Subject $subject)
     {
-        $notes = $subject->notes;
+        $notes = $subject->notes()->where('status', 'approved')->latest()->get();
         $previousQuestions = $subject->previousQuestions;
 
         return view('subjects.show', compact('subject', 'notes', 'previousQuestions'));
