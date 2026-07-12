@@ -11,43 +11,7 @@
     <div style="padding: 48px 0;">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- Dummy data until backend merges --}}
-            @php
-                $reviews = collect([
-                    (object) [
-                        'id' => 1,
-                        'rating' => 5,
-                        'comment' => 'Excellent notes! Very clear and well-organized.',
-                        'user' => (object) ['id' => 2, 'name' => 'Daniel Reyes'],
-                        'note' => (object) ['id' => 1, 'title' => 'Elasticity & Market Demand'],
-                        'created_at' => now()->subDays(1),
-                    ],
-                    (object) [
-                        'id' => 2,
-                        'rating' => 4,
-                        'comment' => 'Good coverage of main concepts. Could use more examples.',
-                        'user' => (object) ['id' => 3, 'name' => 'Priya Nair'],
-                        'note' => (object) ['id' => 2, 'title' => 'Recursion & Big-O Notation'],
-                        'created_at' => now()->subDays(2),
-                    ],
-                    (object) [
-                        'id' => 3,
-                        'rating' => 3,
-                        'comment' => 'Decent but missing some key topics from the syllabus.',
-                        'user' => (object) ['id' => 4, 'name' => 'Amir Hassan'],
-                        'note' => (object) ['id' => 3, 'title' => 'Cell Division & Mitosis'],
-                        'created_at' => now()->subDays(3),
-                    ],
-                    (object) [
-                        'id' => 4,
-                        'rating' => 1,
-                        'comment' => 'This is spam content. Not real notes.',
-                        'user' => (object) ['id' => 5, 'name' => 'Sara Khan'],
-                        'note' => (object) ['id' => 4, 'title' => 'Supply & Demand Curves'],
-                        'created_at' => now()->subHours(6),
-                    ],
-                ]);
-            @endphp
+
 
             <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; overflow: hidden;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 14px;">

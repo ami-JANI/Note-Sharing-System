@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\NoteController as AdminNoteController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\BrowseController;
 use App\Http\Controllers\CreditController;
@@ -44,6 +45,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/notes/pending', [AdminNoteController::class, 'pending'])->name('notes.pending');
         Route::post('/notes/{note}/approve', [AdminNoteController::class, 'approve'])->name('notes.approve');
         Route::post('/notes/{note}/reject', [AdminNoteController::class, 'reject'])->name('notes.reject');
+
+        Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews');
+        Route::post('/reviews/{review}/hide', [AdminReviewController::class, 'hide'])->name('reviews.hide');
+        Route::post('/reviews/{review}/delete', [AdminReviewController::class, 'delete'])->name('reviews.delete');
 
         Route::get('/users', [AdminUserController::class, 'index'])->name('users');
         Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
