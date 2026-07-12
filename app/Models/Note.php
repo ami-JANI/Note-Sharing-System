@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Note extends Model
 {
-    protected $fillable = ['subject_id', 'uploader_id', 'title', 'course_no', 'course_title', 'description', 'file_path', 'credit_price', 'status'];
+    protected $fillable = ['subject_id', 'uploader_id', 'title', 'course_no', 'course_title', 'description', 'file_path', 'preview_image_path', 'preview_pages', 'credit_price', 'status'];
+
+    protected $casts = [
+        'preview_pages' => 'array',
+    ];
 
     public function subject()
     {
