@@ -19,9 +19,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
+// Public — guests can browse approved notes (they're prompted to log in to unlock).
+Route::get('/browse', [BrowseController::class, 'index'])->name('browse.index');
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/browse', [BrowseController::class, 'index'])->name('browse.index');
     Route::get('/semesters/{semester}', [SemesterController::class, 'show'])->name('semesters.show');
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 

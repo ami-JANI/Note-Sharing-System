@@ -21,8 +21,11 @@ class BrowseController extends Controller
             });
         }
 
-        $notes = $query->latest()->paginate(20);
+        $notes = $query->latest()->paginate(20)->withQueryString();
 
-        return view('browse.index', compact('notes'));
+        // Guests get a login-prompt layout; authenticated users get the full app view.
+        $view = auth()->check() ? 'browse.index' : 'browse.guest';
+
+        return view($view, compact('notes'));
     }
 }
