@@ -2,44 +2,128 @@
     <x-slot name="header">
         <div>
             <h2 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 28px; color: rgb(27, 42, 74); letter-spacing: -0.02em;">
-                Browse by semester
+                Browse Notes
             </h2>
-            <p style="font-size: 15px; color: rgb(91, 104, 133); margin-top: 4px;">Select a semester to view its subjects and materials</p>
+            <p style="font-size: 15px; color: rgb(91, 104, 133); margin-top: 4px;">Find notes shared by students across all courses</p>
         </div>
     </x-slot>
 
     <div style="padding: 48px 0;">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-            @if ($semesters->isEmpty())
+            {{-- Dummy data until backend NOTE-102 merges --}}
+            @php
+                $notes = collect([
+                    (object) [
+                        'id' => 1,
+                        'title' => 'Elasticity & Market Demand',
+                        'course_no' => 'ECON 201',
+                        'course_title' => 'Microeconomics',
+                        'credit_price' => 0,
+                        'preview_image_path' => null,
+                        'uploader' => (object) ['id' => 1, 'name' => 'Maya Okonkwo'],
+                        'created_at' => now()->subDays(3),
+                    ],
+                    (object) [
+                        'id' => 2,
+                        'title' => 'Recursion & Big-O Notation',
+                        'course_no' => 'CS 101',
+                        'course_title' => 'Intro to Computer Science',
+                        'credit_price' => 8,
+                        'preview_image_path' => null,
+                        'uploader' => (object) ['id' => 2, 'name' => 'Daniel Reyes'],
+                        'created_at' => now()->subDays(1),
+                    ],
+                    (object) [
+                        'id' => 3,
+                        'title' => 'Cell Division & Mitosis',
+                        'course_no' => 'BIO 240',
+                        'course_title' => 'Human Physiology',
+                        'credit_price' => 0,
+                        'preview_image_path' => null,
+                        'uploader' => (object) ['id' => 3, 'name' => 'Priya Nair'],
+                        'created_at' => now()->subDays(5),
+                    ],
+                    (object) [
+                        'id' => 4,
+                        'title' => 'Supply & Demand Curves',
+                        'course_no' => 'ECON 201',
+                        'course_title' => 'Microeconomics',
+                        'credit_price' => 5,
+                        'preview_image_path' => null,
+                        'uploader' => (object) ['id' => 1, 'name' => 'Maya Okonkwo'],
+                        'created_at' => now()->subDays(2),
+                    ],
+                    (object) [
+                        'id' => 5,
+                        'title' => 'Linear Transformations',
+                        'course_no' => 'MATH 220',
+                        'course_title' => 'Linear Algebra',
+                        'credit_price' => 0,
+                        'preview_image_path' => null,
+                        'uploader' => (object) ['id' => 4, 'name' => 'Amir Hassan'],
+                        'created_at' => now()->subDays(7),
+                    ],
+                    (object) [
+                        'id' => 6,
+                        'title' => 'Organic Reactions Overview',
+                        'course_no' => 'CHEM 130',
+                        'course_title' => 'Organic Chemistry I',
+                        'credit_price' => 12,
+                        'preview_image_path' => null,
+                        'uploader' => (object) ['id' => 5, 'name' => 'Sara Khan'],
+                        'created_at' => now()->subDays(4),
+                    ],
+                ]);
+            @endphp
+
+            @if ($notes->isEmpty())
                 <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 64px 32px; text-align: center;">
                     <svg style="margin: 0 auto; width: 48px; height: 48px; color: rgb(91, 104, 133);" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                     </svg>
-                    <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 18px; color: rgb(27, 42, 74); margin-top: 16px;">No semesters</h3>
-                    <p style="font-size: 14px; color: rgb(91, 104, 133); margin-top: 6px;">No semesters have been added yet.</p>
+                    <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 18px; color: rgb(27, 42, 74); margin-top: 16px;">No notes yet</h3>
+                    <p style="font-size: 14px; color: rgb(91, 104, 133); margin-top: 6px;">Be the first to share notes with your campus.</p>
                 </div>
             @else
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
-                    @foreach ($semesters as $semester)
-                        <a href="{{ route('semesters.show', $semester) }}"
-                           style="display: block; background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 15px; padding: 26px; color: rgb(27, 42, 74); transition: box-shadow 0.2s, border-color 0.2s; text-decoration: none;"
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px;">
+                    @foreach ($notes as $note)
+                        <a href="{{ route('notes.show', $note) }}"
+                           style="display: block; background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 15px; overflow: hidden; color: rgb(27, 42, 74); text-decoration: none; transition: box-shadow 0.2s, border-color 0.2s;"
                            onmouseover="this.style.boxShadow='0 8px 30px -8px rgba(27, 42, 74, 0.15)'; this.style.borderColor='rgba(138, 28, 36, 0.3)'"
                            onmouseout="this.style.boxShadow='none'; this.style.borderColor='rgba(27, 42, 74, 0.1)'">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-                                <div style="width: 44px; height: 44px; border-radius: 11px; background: rgba(138, 28, 36, 0.09); color: rgb(138, 28, 36); display: flex; align-items: center; justify-content: center; font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 20px;">
-                                    {{ $semester->order + 1 }}
-                                </div>
-                                <span style="font-size: 12px; color: rgb(91, 104, 133);">
-                                    {{ $semester->subjects()->count() }} {{ Str::plural('subject', $semester->subjects()->count()) }}
-                                </span>
+                            {{-- Preview Image --}}
+                            <div style="width: 100%; height: 160px; background: rgba(27, 42, 74, 0.04); display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(27, 42, 74, 0.06);">
+                                @if ($note->preview_image_path)
+                                    <img src="{{ Storage::url($note->preview_image_path) }}" alt="{{ $note->title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                @else
+                                    <svg style="width: 36px; height: 36px; color: rgb(91, 104, 133);" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    </svg>
+                                @endif
                             </div>
-                            <div style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 20px; line-height: 1.2; margin-bottom: 8px;">{{ $semester->name }}</div>
-                            <div style="font-size: 14px; color: rgb(91, 104, 133);">View subjects &rarr;</div>
+                            {{-- Details --}}
+                            <div style="padding: 16px;">
+                                <div style="font-weight: 600; font-size: 15px; color: rgb(27, 42, 74); margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $note->title }}</div>
+                                <div style="font-size: 13px; color: rgb(91, 104, 133); margin-bottom: 10px;">{{ $note->course_no }} &middot; {{ $note->course_title }}</div>
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    @if ($note->credit_price > 0)
+                                        <span style="display: inline-flex; padding: 3px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; background: rgba(192, 138, 62, 0.08); color: #C08A3E;">
+                                            {{ $note->credit_price }} credits
+                                        </span>
+                                    @else
+                                        <span style="display: inline-flex; padding: 3px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; background: rgba(46, 125, 79, 0.08); color: rgb(46, 125, 79);">
+                                            Free
+                                        </span>
+                                    @endif
+                                    <span style="font-size: 12px; color: rgb(91, 104, 133);">by {{ $note->uploader->name }}</span>
+                                </div>
+                            </div>
                         </a>
                     @endforeach
                 </div>
             @endif
+
         </div>
     </div>
 </x-app-layout>
