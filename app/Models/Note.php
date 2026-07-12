@@ -23,6 +23,11 @@ class Note extends Model
         return $this->hasMany(NotePurchase::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function isUnlockedBy(?User $user): bool
     {
         if (! $user) {
