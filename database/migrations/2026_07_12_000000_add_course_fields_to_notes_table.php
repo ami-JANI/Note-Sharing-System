@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('notes', function (Blueprint $table) {
-            $table->string('course_no')->after('title');
-            $table->string('course_title')->after('course_no');
+            $table->string('course_no')->nullable()->after('title');
+            $table->string('course_title')->nullable()->after('course_no');
         });
     }
 
