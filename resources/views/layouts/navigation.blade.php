@@ -5,7 +5,7 @@
             <div class="flex items-center gap-10">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5" style="color: rgb(27, 42, 74);">
+                    <a href="{{ route('welcome') }}" class="flex items-center gap-2.5" style="color: rgb(27, 42, 74);">
                         <span style="display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; background: rgb(138, 28, 36); color: rgb(251, 248, 243); border-radius: 7px; font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 19px;">U</span>
                         <span style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 21px; letter-spacing: -0.01em;">UniNotes</span>
                     </a>
