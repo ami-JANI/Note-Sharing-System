@@ -49,15 +49,7 @@
             @else
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px;">
                     @foreach ($notes as $note)
-                        <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 20px;">
-                            <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 17px; color: rgb(27, 42, 74); margin: 0 0 4px 0;">
-                                <a href="{{ route('notes.download', $note) }}" style="color: rgb(27, 42, 74); text-decoration: none;">{{ $note->title }}</a>
-                            </h3>
-                            <p style="font-size: 13px; color: rgb(91, 104, 133); margin: 0 0 2px 0;">{{ $note->course_no }} &middot; {{ $note->course_title }}</p>
-                            <p style="font-size: 12px; color: rgb(91, 104, 133); margin: 0;">
-                                by <a href="{{ route('profiles.show', $note->uploader) }}" style="color: rgb(138, 28, 36); text-decoration: none;">{{ $note->uploader->name }}</a>
-                            </p>
-                        </div>
+                        <x-note-card :note="$note" />
                     @endforeach
                 </div>
                 <div style="margin-top: 24px;">
