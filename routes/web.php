@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::get('/notes/{note}', [NoteController::class, 'show'])->name('notes.show');
     Route::get('/notes/{note}/download', [NoteController::class, 'download'])->name('notes.download');
     Route::post('/notes/{note}/unlock', [NoteController::class, 'unlock'])->name('notes.unlock');
     Route::post('/notes/{note}/reviews', [ReviewController::class, 'store'])->name('reviews.store');

@@ -39,6 +39,15 @@ class NoteController extends Controller
         return back()->with('status', 'Note uploaded and awaiting admin approval.');
     }
 
+    public function show(Note $note)
+    {
+        abort_unless($note->status === 'approved', 404);
+
+        $note->load('uploader', 'subject');
+
+        return view('notes.show', compact('note'));
+    }
+
     public function download(Note $note)
     {
         $user = auth()->user();

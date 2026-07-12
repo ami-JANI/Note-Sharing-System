@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Semester;
+use App\Models\Note;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        $semesters = Semester::orderBy('order')->get();
+        $notes = Note::where('status', 'approved')
+            ->with('uploader')
+            ->latest()
+            ->get();
 
-        return view('dashboard', compact('semesters'));
+        return view('dashboard', compact('notes'));
     }
 }
