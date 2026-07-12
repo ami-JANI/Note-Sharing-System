@@ -20,41 +20,30 @@
                 <span style="font-weight: 600; color: rgb(27, 42, 74);">{{ $note->title }}</span>
             </nav>
 
-            {{-- Dummy data until backend merges --}}
             @php
-                $note = $note ?? (object) [
-                    'id' => 1,
-                    'title' => 'Elasticity & Market Demand',
-                    'course_no' => 'ECON 201',
-                    'course_title' => 'Microeconomics',
-                    'credit_price' => 0,
-                    'preview_image_path' => null,
-                    'description' => 'Comprehensive notes covering elasticity concepts, market demand curves, and price elasticity of demand with real-world examples.',
-                    'uploader' => (object) ['id' => 1, 'name' => 'Maya Okonkwo'],
-                    'created_at' => now()->subDays(3),
-                ];
-                $isUnlocked = ($note->credit_price ?? 0) === 0;
+                $isUnlocked = $note->isUnlockedBy(auth()->user());
+                $previewPages = $note->preview_pages ?? [];
             @endphp
 
-            {{-- Preview Images --}}
+            {{-- Preview: first pages only; full note requires unlock/download --}}
             <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; overflow: hidden; margin-bottom: 24px;">
                 <div style="padding: 24px;">
-                    <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 18px; color: rgb(27, 42, 74); margin-bottom: 16px;">Preview</h3>
+                    <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 18px; color: rgb(27, 42, 74); margin-bottom: 16px;">Preview <span style="font-size: 13px; font-weight: 400; color: rgb(91, 104, 133);">(first {{ count($previewPages) ?: 2 }} pages)</span></h3>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                        {{-- Page 1 placeholder --}}
-                        <div style="width: 100%; aspect-ratio: 3/4; background: rgba(27, 42, 74, 0.04); border: 1px solid rgba(27, 42, 74, 0.06); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px;">
-                            <svg style="width: 32px; height: 32px; color: rgb(91, 104, 133);" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                            </svg>
-                            <span style="font-size: 12px; color: rgb(91, 104, 133);">Page 1</span>
-                        </div>
-                        {{-- Page 2 placeholder --}}
-                        <div style="width: 100%; aspect-ratio: 3/4; background: rgba(27, 42, 74, 0.04); border: 1px solid rgba(27, 42, 74, 0.06); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px;">
-                            <svg style="width: 32px; height: 32px; color: rgb(91, 104, 133);" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                            </svg>
-                            <span style="font-size: 12px; color: rgb(91, 104, 133);">Page 2</span>
-                        </div>
+                        @forelse ($previewPages as $i => $page)
+                            <div style="width: 100%; aspect-ratio: 3/4; background: rgba(27, 42, 74, 0.04); border: 1px solid rgba(27, 42, 74, 0.06); border-radius: 10px; overflow: hidden;">
+                                <img src="{{ Storage::url($page) }}" alt="Page {{ $i + 1 }}" style="width: 100%; height: 100%; object-fit: contain;">
+                            </div>
+                        @empty
+                            @for ($p = 1; $p <= 2; $p++)
+                                <div style="width: 100%; aspect-ratio: 3/4; background: rgba(27, 42, 74, 0.04); border: 1px solid rgba(27, 42, 74, 0.06); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px;">
+                                    <svg style="width: 32px; height: 32px; color: rgb(91, 104, 133);" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    </svg>
+                                    <span style="font-size: 12px; color: rgb(91, 104, 133);">Page {{ $p }}</span>
+                                </div>
+                            @endfor
+                        @endforelse
                     </div>
                 </div>
             </div>

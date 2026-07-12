@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use App\Models\NotePurchase;
 use App\Models\Subject;
+use App\Services\NotePreviewService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class NoteController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request, NotePreviewService $previews)
     {
         $validated = $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
@@ -24,7 +25,7 @@ class NoteController extends Controller
 
         $path = $request->file('file')->store('notes', 'public');
 
-        Note::create([
+        $note = Note::create([
             'subject_id' => $validated['subject_id'],
             'uploader_id' => $request->user()->id,
             'title' => $validated['title'],
@@ -35,6 +36,10 @@ class NoteController extends Controller
             'credit_price' => $validated['credit_price'] ?? 0,
             'status' => 'pending',
         ]);
+
+        // Best-effort preview generation (no-op if the file isn't a PDF or
+        // Ghostscript isn't installed).
+        $previews->generate($note);
 
         return back()->with('status', 'Note uploaded and awaiting admin approval.');
     }

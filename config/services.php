@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    // Optional: absolute path to a Ghostscript binary for PDF note previews.
+    // If unset, the app auto-detects gswin64c/gs on PATH; if none is found,
+    // preview generation is skipped and cards show a placeholder icon.
+    'ghostscript' => [
+        'bin' => env('GHOSTSCRIPT_BIN'),
+    ],
+
 ];
