@@ -91,7 +91,7 @@
                         Download Note
                     </a>
                 @else
-                    <form method="POST" action="{{ route('credits.unlock', $note) }}" style="display: inline;">
+                    <form method="POST" action="{{ route('notes.unlock', $note) }}" style="display: inline;">
                         @csrf
                         <button type="submit"
                                 style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: rgba(192, 138, 62, 0.08); color: #C08A3E; border: 1px solid rgba(192, 138, 62, 0.2); border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.15s;"

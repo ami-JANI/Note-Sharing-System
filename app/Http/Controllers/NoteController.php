@@ -15,8 +15,10 @@ class NoteController extends Controller
         $validated = $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
             'title' => ['required', 'string', 'max:255'],
+            'course_no' => ['required', 'string', 'max:50'],
+            'course_title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'file' => ['required', 'file', 'mimes:pdf,doc,docx,ppt,pptx', 'max:10240'],
+            'file' => ['required', 'file', 'mimes:pdf,docx', 'max:10240'],
             'credit_price' => ['nullable', 'integer', 'min:0'],
         ]);
 
@@ -26,6 +28,8 @@ class NoteController extends Controller
             'subject_id' => $validated['subject_id'],
             'uploader_id' => $request->user()->id,
             'title' => $validated['title'],
+            'course_no' => $validated['course_no'],
+            'course_title' => $validated['course_title'],
             'description' => $validated['description'] ?? null,
             'file_path' => $path,
             'credit_price' => $validated['credit_price'] ?? 0,
@@ -33,6 +37,15 @@ class NoteController extends Controller
         ]);
 
         return back()->with('status', 'Note uploaded and awaiting admin approval.');
+    }
+
+    public function show(Note $note)
+    {
+        abort_unless($note->status === 'approved', 404);
+
+        $note->load('uploader', 'subject');
+
+        return view('notes.show', compact('note'));
     }
 
     public function download(Note $note)

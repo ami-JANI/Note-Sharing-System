@@ -1,13 +1,16 @@
 <?php
 
 use App\Http\Controllers\Admin\NoteController as AdminNoteController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\BrowseController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PreviousQuestionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\SubjectController;
 use Illuminate\Support\Facades\Route;
@@ -18,12 +21,15 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/browse', [BrowseController::class, 'index'])->name('browse.index');
     Route::get('/semesters/{semester}', [SemesterController::class, 'show'])->name('semesters.show');
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+    Route::get('/notes/{note}', [NoteController::class, 'show'])->name('notes.show');
     Route::get('/notes/{note}/download', [NoteController::class, 'download'])->name('notes.download');
     Route::post('/notes/{note}/unlock', [NoteController::class, 'unlock'])->name('notes.unlock');
+    Route::post('/notes/{note}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
     Route::post('/previous-questions', [PreviousQuestionController::class, 'store'])->name('previous-questions.store');
     Route::get('/previous-questions/{previousQuestion}/download', [PreviousQuestionController::class, 'download'])->name('previous-questions.download');
@@ -40,6 +46,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/notes/pending', [AdminNoteController::class, 'pending'])->name('notes.pending');
         Route::post('/notes/{note}/approve', [AdminNoteController::class, 'approve'])->name('notes.approve');
         Route::post('/notes/{note}/reject', [AdminNoteController::class, 'reject'])->name('notes.reject');
+
+        Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews');
+        Route::post('/reviews/{review}/hide', [AdminReviewController::class, 'hide'])->name('reviews.hide');
+        Route::post('/reviews/{review}/delete', [AdminReviewController::class, 'delete'])->name('reviews.delete');
 
         Route::get('/users', [AdminUserController::class, 'index'])->name('users');
         Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');

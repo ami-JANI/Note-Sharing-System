@@ -26,79 +26,8 @@
                 </div>
             </form>
 
-            {{-- Dummy data until backend NOTE-102 merges --}}
             @php
                 $query = request('q', '');
-                $notes = collect([
-                    (object) [
-                        'id' => 1,
-                        'title' => 'Elasticity & Market Demand',
-                        'course_no' => 'ECON 201',
-                        'course_title' => 'Microeconomics',
-                        'credit_price' => 0,
-                        'preview_image_path' => null,
-                        'uploader' => (object) ['id' => 1, 'name' => 'Maya Okonkwo'],
-                        'created_at' => now()->subDays(3),
-                    ],
-                    (object) [
-                        'id' => 2,
-                        'title' => 'Recursion & Big-O Notation',
-                        'course_no' => 'CS 101',
-                        'course_title' => 'Intro to Computer Science',
-                        'credit_price' => 8,
-                        'preview_image_path' => null,
-                        'uploader' => (object) ['id' => 2, 'name' => 'Daniel Reyes'],
-                        'created_at' => now()->subDays(1),
-                    ],
-                    (object) [
-                        'id' => 3,
-                        'title' => 'Cell Division & Mitosis',
-                        'course_no' => 'BIO 240',
-                        'course_title' => 'Human Physiology',
-                        'credit_price' => 0,
-                        'preview_image_path' => null,
-                        'uploader' => (object) ['id' => 3, 'name' => 'Priya Nair'],
-                        'created_at' => now()->subDays(5),
-                    ],
-                    (object) [
-                        'id' => 4,
-                        'title' => 'Supply & Demand Curves',
-                        'course_no' => 'ECON 201',
-                        'course_title' => 'Microeconomics',
-                        'credit_price' => 5,
-                        'preview_image_path' => null,
-                        'uploader' => (object) ['id' => 1, 'name' => 'Maya Okonkwo'],
-                        'created_at' => now()->subDays(2),
-                    ],
-                    (object) [
-                        'id' => 5,
-                        'title' => 'Linear Transformations',
-                        'course_no' => 'MATH 220',
-                        'course_title' => 'Linear Algebra',
-                        'credit_price' => 0,
-                        'preview_image_path' => null,
-                        'uploader' => (object) ['id' => 4, 'name' => 'Amir Hassan'],
-                        'created_at' => now()->subDays(7),
-                    ],
-                    (object) [
-                        'id' => 6,
-                        'title' => 'Organic Reactions Overview',
-                        'course_no' => 'CHEM 130',
-                        'course_title' => 'Organic Chemistry I',
-                        'credit_price' => 12,
-                        'preview_image_path' => null,
-                        'uploader' => (object) ['id' => 5, 'name' => 'Sara Khan'],
-                        'created_at' => now()->subDays(4),
-                    ],
-                ]);
-
-                if ($query) {
-                    $notes = $notes->filter(function ($note) use ($query) {
-                        return str_contains(strtolower($note->title), strtolower($query))
-                            || str_contains(strtolower($note->course_no), strtolower($query))
-                            || str_contains(strtolower($note->course_title), strtolower($query));
-                    })->values();
-                }
             @endphp
 
             @if ($query && $notes->isEmpty())
@@ -120,8 +49,19 @@
             @else
                 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px;">
                     @foreach ($notes as $note)
-                        <x-note-card :note="$note" />
+                        <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 20px;">
+                            <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 17px; color: rgb(27, 42, 74); margin: 0 0 4px 0;">
+                                <a href="{{ route('notes.download', $note) }}" style="color: rgb(27, 42, 74); text-decoration: none;">{{ $note->title }}</a>
+                            </h3>
+                            <p style="font-size: 13px; color: rgb(91, 104, 133); margin: 0 0 2px 0;">{{ $note->course_no }} &middot; {{ $note->course_title }}</p>
+                            <p style="font-size: 12px; color: rgb(91, 104, 133); margin: 0;">
+                                by <a href="{{ route('profiles.show', $note->uploader) }}" style="color: rgb(138, 28, 36); text-decoration: none;">{{ $note->uploader->name }}</a>
+                            </p>
+                        </div>
                     @endforeach
+                </div>
+                <div style="margin-top: 24px;">
+                    {{ $notes->links() }}
                 </div>
             @endif
 
