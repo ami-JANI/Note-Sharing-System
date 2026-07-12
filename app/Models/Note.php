@@ -23,6 +23,21 @@ class Note extends Model
         return $this->hasMany(NotePurchase::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function visibleReviews()
+    {
+        return $this->reviews()->where('is_hidden', false);
+    }
+
+    public function averageRating(): float
+    {
+        return (float) $this->visibleReviews()->average('rating') ?: 0.0;
+    }
+
     public function isUnlockedBy(?User $user): bool
     {
         if (! $user) {
