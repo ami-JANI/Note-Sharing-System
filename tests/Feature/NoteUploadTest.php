@@ -41,6 +41,8 @@ class NoteUploadTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('notes.store'), [
             'subject_id' => $this->subject->id,
             'title' => 'Introduction to Algorithms',
+            'course_no' => 'CSE301',
+            'course_title' => 'Algorithms',
             'description' => 'Chapter 1 notes',
             'file' => $file,
         ]);
@@ -52,6 +54,8 @@ class NoteUploadTest extends TestCase
             'subject_id' => $this->subject->id,
             'uploader_id' => $this->user->id,
             'title' => 'Introduction to Algorithms',
+            'course_no' => 'CSE301',
+            'course_title' => 'Algorithms',
             'description' => 'Chapter 1 notes',
         ]);
     }
@@ -65,6 +69,8 @@ class NoteUploadTest extends TestCase
         $this->actingAs($this->user)->post(route('notes.store'), [
             'subject_id' => $this->subject->id,
             'title' => 'Data Structures Review',
+            'course_no' => 'CSE201',
+            'course_title' => 'Data Structures',
             'description' => null,
             'file' => $file,
         ]);
@@ -88,8 +94,12 @@ class NoteUploadTest extends TestCase
         $this->actingAs($this->user)->post(route('notes.store'), [
             'subject_id' => $this->subject->id,
             'title' => 'Download Test',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
             'file' => $file,
         ]);
+
+        Note::first()->update(['status' => 'approved']);
 
         $note = Note::first();
 
@@ -104,6 +114,8 @@ class NoteUploadTest extends TestCase
         $response = $this->post(route('notes.store'), [
             'subject_id' => $this->subject->id,
             'title' => 'Should not work',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
             'file' => UploadedFile::fake()->create('test.pdf'),
         ]);
 
@@ -119,6 +131,8 @@ class NoteUploadTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('notes.store'), [
             'subject_id' => $this->subject->id,
             'title' => 'Invalid file',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
             'file' => $file,
         ]);
 
@@ -135,6 +149,8 @@ class NoteUploadTest extends TestCase
         $response = $this->actingAs($this->user)->post(route('notes.store'), [
             'subject_id' => $this->subject->id,
             'title' => 'Oversized file',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
             'file' => $file,
         ]);
 
@@ -150,9 +166,79 @@ class NoteUploadTest extends TestCase
 
         $response = $this->actingAs($this->user)->post(route('notes.store'), [
             'subject_id' => $this->subject->id,
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
             'file' => $file,
         ]);
 
         $response->assertSessionHasErrors('title');
+    }
+
+    public function test_note_upload_requires_course_no(): void
+    {
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->create('notes.pdf', 100);
+
+        $response = $this->actingAs($this->user)->post(route('notes.store'), [
+            'subject_id' => $this->subject->id,
+            'title' => 'Missing course no',
+            'course_title' => 'Programming',
+            'file' => $file,
+        ]);
+
+        $response->assertSessionHasErrors('course_no');
+    }
+
+    public function test_note_upload_requires_course_title(): void
+    {
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->create('notes.pdf', 100);
+
+        $response = $this->actingAs($this->user)->post(route('notes.store'), [
+            'subject_id' => $this->subject->id,
+            'title' => 'Missing course title',
+            'course_no' => 'CSE101',
+            'file' => $file,
+        ]);
+
+        $response->assertSessionHasErrors('course_title');
+    }
+
+    public function test_note_upload_rejects_unsupported_mime_type(): void
+    {
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->create('notes.ppt', 100);
+
+        $response = $this->actingAs($this->user)->post(route('notes.store'), [
+            'subject_id' => $this->subject->id,
+            'title' => 'PPT should fail',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
+            'file' => $file,
+        ]);
+
+        $response->assertSessionHasErrors('file');
+        $this->assertDatabaseCount('notes', 0);
+    }
+
+    public function test_note_upload_allows_docx(): void
+    {
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->create('notes.docx', 100);
+
+        $response = $this->actingAs($this->user)->post(route('notes.store'), [
+            'subject_id' => $this->subject->id,
+            'title' => 'DOCX Allowed',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
+            'file' => $file,
+        ]);
+
+        $response->assertSessionHas('status', 'Note uploaded and awaiting admin approval.');
+        $this->assertDatabaseHas('notes', ['title' => 'DOCX Allowed']);
     }
 }
