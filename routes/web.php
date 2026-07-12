@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\NoteController as AdminNoteController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\BrowseController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NoteController;
@@ -20,6 +21,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/semesters/{semester}', [SemesterController::class, 'show'])->name('semesters.show');
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
+
+    Route::get('/browse', [BrowseController::class, 'index'])->name('browse.index');
 
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
     Route::get('/notes/{note}/download', [NoteController::class, 'download'])->name('notes.download');
