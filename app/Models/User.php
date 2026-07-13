@@ -91,6 +91,19 @@ class User extends Authenticatable
         return $this->hasMany(Payment::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Notes this user has downloaded (distinct, most recent first).
+     */
+    public function downloadedNotes()
+    {
+        return $this->belongsToMany(Note::class, 'note_downloads', 'user_id', 'note_id')->withTimestamps();
+    }
+
     /**
      * Uploaders this user has favorited.
      */

@@ -38,6 +38,11 @@ class Note extends Model
         return $this->hasMany(Review::class);
     }
 
+    public function downloads()
+    {
+        return $this->hasMany(NoteDownload::class);
+    }
+
     public function isUnlockedBy(?User $user): bool
     {
         if (! $user) {

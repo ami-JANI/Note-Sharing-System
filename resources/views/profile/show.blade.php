@@ -100,6 +100,76 @@
                 </div>
             @endforelse
 
+            {{-- Downloaded notes --}}
+            <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 20px; color: rgb(27, 42, 74); margin: 40px 0 16px;">Downloaded Notes</h3>
+            @forelse ($downloadedNotes as $note)
+                <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 14px; padding: 16px 20px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                    <div style="min-width: 0;">
+                        <div style="font-weight: 600; font-size: 15px; color: rgb(27, 42, 74);">{{ $note->title }}</div>
+                        <div style="font-size: 13px; color: rgb(91, 104, 133);">{{ $note->course_no }} &middot; by {{ optional($note->uploader)->name ?? 'Unknown' }} &middot; downloaded {{ $note->pivot->created_at?->diffForHumans() }}</div>
+                    </div>
+                    @if ($note->status === 'approved' && ! $note->hidden)
+                        <a href="{{ route('notes.show', $note) }}" style="font-size: 13px; font-weight: 600; color: rgb(58, 71, 98); text-decoration: none; padding: 6px 12px;">View</a>
+                    @endif
+                </div>
+            @empty
+                <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 40px 32px; text-align: center;">
+                    <p style="font-size: 14px; color: rgb(91, 104, 133);">You haven't downloaded any notes yet.</p>
+                </div>
+            @endforelse
+
+            {{-- Favorite uploaders --}}
+            <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 20px; color: rgb(27, 42, 74); margin: 40px 0 16px;">Favorite Uploaders</h3>
+            @forelse ($favoriteUploaders as $uploader)
+                <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 14px; padding: 16px 20px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 14px; min-width: 0;">
+                        @if ($uploader->photo)
+                            <img src="{{ Storage::url($uploader->photo) }}" alt="{{ $uploader->name }}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover;">
+                        @else
+                            <div style="width: 44px; height: 44px; border-radius: 50%; background: rgba(138, 28, 36, 0.09); color: rgb(138, 28, 36); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; font-family: 'Source Serif 4', serif;">
+                                {{ strtoupper(substr($uploader->name, 0, 1)) }}
+                            </div>
+                        @endif
+                        <div style="min-width: 0;">
+                            <div style="font-weight: 600; font-size: 15px; color: rgb(27, 42, 74);">{{ $uploader->name }}</div>
+                            <div style="font-size: 13px; color: rgb(91, 104, 133);">{{ $uploader->notes_count }} {{ Str::plural('note', $uploader->notes_count) }} &middot; {{ $uploader->department ?: 'No department' }}</div>
+                        </div>
+                    </div>
+                    <a href="{{ route('profiles.show', $uploader) }}" style="font-size: 13px; font-weight: 600; color: rgb(58, 71, 98); text-decoration: none; padding: 6px 12px;">View profile</a>
+                </div>
+            @empty
+                <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 40px 32px; text-align: center;">
+                    <p style="font-size: 14px; color: rgb(91, 104, 133);">You haven't favorited any uploaders yet.</p>
+                </div>
+            @endforelse
+
+            {{-- Reviews given --}}
+            <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 20px; color: rgb(27, 42, 74); margin: 40px 0 16px;">Reviews You've Given</h3>
+            @forelse ($reviewsGiven as $review)
+                <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 14px; padding: 16px 20px; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                        <div style="font-weight: 600; font-size: 15px; color: rgb(27, 42, 74);">
+                            @if ($review->note)
+                                <a href="{{ route('notes.show', $review->note) }}" style="color: rgb(27, 42, 74); text-decoration: none;">{{ $review->note->title }}</a>
+                            @else
+                                <span style="color: rgb(91, 104, 133);">(note removed)</span>
+                            @endif
+                        </div>
+                        <div style="color: rgb(192, 138, 62); font-size: 14px; letter-spacing: 2px;">
+                            {{ str_repeat('★', $review->rating) }}{{ str_repeat('☆', 5 - $review->rating) }}
+                        </div>
+                    </div>
+                    @if ($review->comment)
+                        <p style="font-size: 14px; color: rgb(58, 71, 98); margin-top: 8px;">{{ $review->comment }}</p>
+                    @endif
+                    <div style="font-size: 12px; color: rgb(138, 150, 174); margin-top: 8px;">{{ $review->created_at->format('M d, Y') }}</div>
+                </div>
+            @empty
+                <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 40px 32px; text-align: center;">
+                    <p style="font-size: 14px; color: rgb(91, 104, 133);">You haven't reviewed any notes yet.</p>
+                </div>
+            @endforelse
+
         </div>
     </div>
 </x-app-layout>

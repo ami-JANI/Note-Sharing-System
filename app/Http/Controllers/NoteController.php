@@ -94,6 +94,10 @@ class NoteController extends Controller
             return back()->withErrors(['note' => 'You must unlock this note first.']);
         }
 
+        // Record the download so it can surface on the user's profile.
+        // updateOrCreate keeps one row per user/note and refreshes the timestamp.
+        $note->downloads()->updateOrCreate(['user_id' => $user->id], []);
+
         $extension = pathinfo($note->file_path, PATHINFO_EXTENSION);
         $downloadName = $note->title.($extension ? '.'.$extension : '');
 
