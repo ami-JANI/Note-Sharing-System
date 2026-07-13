@@ -76,7 +76,6 @@
                                             <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
                                                 <form method="POST" action="{{ route('admin.notes.approve', $note) }}">
                                                     @csrf
-                                                    @method('PATCH')
                                                     <button type="submit"
                                                             style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; font-size: 12px; font-weight: 600; color: rgb(46, 125, 79); background: rgba(46, 125, 79, 0.06); border: 1px solid rgba(46, 125, 79, 0.2); border-radius: 8px; cursor: pointer; transition: background 0.15s;">
                                                         <svg style="width: 13px; height: 13px;" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -87,7 +86,6 @@
                                                 </form>
                                                 <form method="POST" action="{{ route('admin.notes.reject', $note) }}">
                                                     @csrf
-                                                    @method('PATCH')
                                                     <button type="submit"
                                                             style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; font-size: 12px; font-weight: 600; color: rgb(180, 30, 30); background: rgba(180, 30, 30, 0.06); border: 1px solid rgba(180, 30, 30, 0.2); border-radius: 8px; cursor: pointer; transition: background 0.15s;">
                                                         <svg style="width: 13px; height: 13px;" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
