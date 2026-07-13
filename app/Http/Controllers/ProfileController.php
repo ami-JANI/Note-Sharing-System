@@ -42,24 +42,18 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
+        $data = collect($request->validated())
+            ->only(['name', 'department', 'batch', 'current_semester_id', 'photo'])
+            ->toArray();
 
         if ($request->hasFile('photo')) {
             if ($request->user()->photo) {
                 Storage::disk('public')->delete($request->user()->photo);
             }
-            $validated['photo'] = $request->file('photo')->store('photos', 'public');
-        } else {
-            unset($validated['photo']);
+            $data['photo'] = $request->file('photo')->store('photos', 'public');
         }
 
-        $request->user()->fill($validated);
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
+        $request->user()->fill($data)->save();
 
         return Redirect::route('profile.show')->with('status', 'profile-updated');
     }
