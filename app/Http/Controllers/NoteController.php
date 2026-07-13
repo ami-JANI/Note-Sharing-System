@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Storage;
 
 class NoteController extends Controller
 {
+    public function create()
+    {
+        return view('notes.create');
+    }
+
     public function store(Request $request, NotePreviewService $previews)
     {
         $validated = $request->validate([

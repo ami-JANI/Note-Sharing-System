@@ -16,6 +16,9 @@
                     <a href="{{ route('dashboard') }}" style="font-size: 15px; font-weight: 500; color: {{ request()->routeIs('dashboard') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('dashboard') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
                         Dashboard
                     </a>
+                    <a href="{{ route('notes.create') }}" style="font-size: 15px; font-weight: 500; color: {{ request()->routeIs('notes.create') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('notes.create') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
+                        Upload
+                    </a>
                     <a href="{{ route('credits.buy') }}" style="font-size: 15px; font-weight: 500; color: {{ request()->routeIs('credits.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('credits.*') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
                         Buy Credits
                     </a>
@@ -79,6 +82,9 @@
         <div class="pt-2 pb-3 space-y-1">
             <a href="{{ route('dashboard') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('dashboard') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
                 Dashboard
+            </a>
+            <a href="{{ route('notes.create') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('notes.create') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
+                Upload
             </a>
             <a href="{{ route('credits.buy') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('credits.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
                 Buy Credits
