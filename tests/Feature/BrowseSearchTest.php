@@ -22,8 +22,8 @@ class BrowseSearchTest extends TestCase
         $sub2 = Subject::create(['semester_id' => $s1->id, 'code' => 'CSE201', 'name' => 'Data Structures']);
         $u = User::factory()->create();
 
-        Note::create(['subject_id' => $sub1->id, 'uploader_id' => $u->id, 'title' => 'PHP Basics', 'course_no' => 'CSE101', 'course_title' => 'Programming', 'file_path' => 'notes/a.pdf', 'status' => 'approved']);
-        Note::create(['subject_id' => $sub2->id, 'uploader_id' => $u->id, 'title' => 'Linked Lists', 'course_no' => 'CSE201', 'course_title' => 'Data Structures', 'file_path' => 'notes/b.pdf', 'status' => 'approved']);
+        Note::create(['subject_id' => $sub1->id, 'uploader_id' => $u->id, 'title' => 'PHP Basics', 'course_no' => 'CSE101', 'course_title' => 'Programming', 'department' => 'CSE', 'semester_id' => $s1->id, 'file_path' => 'notes/a.pdf', 'status' => 'approved']);
+        Note::create(['subject_id' => $sub2->id, 'uploader_id' => $u->id, 'title' => 'Linked Lists', 'course_no' => 'CSE201', 'course_title' => 'Data Structures', 'department' => 'CSE', 'semester_id' => $s1->id, 'file_path' => 'notes/b.pdf', 'status' => 'approved']);
         Note::create(['subject_id' => $sub1->id, 'uploader_id' => $u->id, 'title' => 'Hidden', 'course_no' => 'CSE101', 'course_title' => 'Programming', 'file_path' => 'notes/c.pdf', 'status' => 'pending']);
     }
 
@@ -49,6 +49,18 @@ class BrowseSearchTest extends TestCase
     {
         $r = $this->actingAs(User::factory()->create())->get(route('browse.index', ['q' => 'Structures']));
         $r->assertSee('Linked Lists')->assertDontSee('PHP Basics');
+    }
+
+    public function test_filters_by_department(): void
+    {
+        $r = $this->actingAs(User::factory()->create())->get(route('browse.index', ['q' => 'CSE']));
+        $r->assertSee('PHP Basics')->assertSee('Linked Lists');
+    }
+
+    public function test_filters_by_semester_name(): void
+    {
+        $r = $this->actingAs(User::factory()->create())->get(route('browse.index', ['q' => 'Semester']));
+        $r->assertSee('PHP Basics')->assertSee('Linked Lists');
     }
 
     public function test_empty_when_no_match(): void
