@@ -110,7 +110,7 @@ class NoteUploadTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('notes.download', $note));
 
         $response->assertOk();
-        $response->assertHeader('content-disposition', 'attachment; filename="Download Test"');
+        $response->assertHeader('content-disposition', 'attachment; filename="Download Test.pdf"');
     }
 
     public function test_unauthenticated_user_cannot_upload_note(): void
