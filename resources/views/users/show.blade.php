@@ -58,7 +58,7 @@
                 @else
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;">
                         @foreach ($notes as $note)
-                            <a href="{{ route('subjects.show', $note->subject) }}"
+                            <a href="{{ route('notes.show', $note) }}"
                                style="display: block; background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 15px; padding: 22px; color: rgb(27, 42, 74); text-decoration: none; transition: box-shadow 0.2s, border-color 0.2s;"
                                onmouseover="this.style.boxShadow='0 8px 30px -8px rgba(27, 42, 74, 0.15)'; this.style.borderColor='rgba(138, 28, 36, 0.3)'"
                                onmouseout="this.style.boxShadow='none'; this.style.borderColor='rgba(27, 42, 74, 0.1)'">
@@ -70,7 +70,7 @@
                                     </div>
                                     <div style="min-width: 0;">
                                         <div style="font-weight: 600; font-size: 14px; color: rgb(27, 42, 74); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $note->title }}</div>
-                                        <div style="font-size: 12px; color: rgb(91, 104, 133);">{{ $note->subject->code }}</div>
+                                        <div style="font-size: 12px; color: rgb(91, 104, 133);">{{ $note->course_no }}</div>
                                     </div>
                                 </div>
                                 @if ($note->description)
