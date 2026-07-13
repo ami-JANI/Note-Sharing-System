@@ -29,7 +29,6 @@ class ProfileTest extends TestCase
             ->actingAs($user)
             ->patch('/profile', [
                 'name' => 'Test User',
-                'email' => 'test@example.com',
             ]);
 
         $response
@@ -39,26 +38,51 @@ class ProfileTest extends TestCase
         $user->refresh();
 
         $this->assertSame('Test User', $user->name);
-        $this->assertSame('test@example.com', $user->email);
-        $this->assertNull($user->email_verified_at);
     }
 
-    public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void
+    public function test_email_cannot_be_changed_via_profile(): void
+    {
+        $user = User::factory()->create(['email' => 'original@example.com']);
+
+        $this->actingAs($user)->patch('/profile', [
+            'name' => 'Test User',
+            'email' => 'hacked@example.com',
+        ]);
+
+        $user->refresh();
+
+        $this->assertSame('original@example.com', $user->email);
+    }
+
+    public function test_roll_cannot_be_changed_via_profile(): void
+    {
+        $user = User::factory()->create(['roll' => '12345']);
+
+        $this->actingAs($user)->patch('/profile', [
+            'name' => 'Test User',
+            'roll' => '99999',
+        ]);
+
+        $user->refresh();
+
+        $this->assertSame('12345', $user->roll);
+    }
+
+    public function test_name_department_batch_can_be_updated(): void
     {
         $user = User::factory()->create();
 
-        $response = $this
-            ->actingAs($user)
-            ->patch('/profile', [
-                'name' => 'Test User',
-                'email' => $user->email,
-            ]);
+        $this->actingAs($user)->patch('/profile', [
+            'name' => 'New Name',
+            'department' => 'CSE',
+            'batch' => '50',
+        ]);
 
-        $response
-            ->assertSessionHasNoErrors()
-            ->assertRedirect('/profile');
+        $user->refresh();
 
-        $this->assertNotNull($user->refresh()->email_verified_at);
+        $this->assertSame('New Name', $user->name);
+        $this->assertSame('CSE', $user->department);
+        $this->assertSame('50', $user->batch);
     }
 
     public function test_user_can_delete_their_account(): void
