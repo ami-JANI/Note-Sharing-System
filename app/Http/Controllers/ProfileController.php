@@ -23,6 +23,18 @@ class ProfileController extends Controller
         return view('profile.show', [
             'user' => $user,
             'notes' => $user->notes()->latest()->get(),
+            'downloadedNotes' => $user->downloadedNotes()
+                ->with('uploader')
+                ->orderByPivot('created_at', 'desc')
+                ->get(),
+            'favoriteUploaders' => $user->favoriteUploaders()
+                ->withCount('notes')
+                ->orderByPivot('created_at', 'desc')
+                ->get(),
+            'reviewsGiven' => $user->reviews()
+                ->with('note')
+                ->latest()
+                ->get(),
         ]);
     }
 

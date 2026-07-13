@@ -1,14 +1,35 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
             <h2 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 28px; color: rgb(27, 42, 74); letter-spacing: -0.02em;">
                 {{ $user->name }}'s Profile
             </h2>
+            @auth
+                @if (auth()->id() !== $user->id)
+                    @php($isFavorited = auth()->user()->hasFavorited($user))
+                    <form method="POST" action="{{ route('users.favorite', $user) }}">
+                        @csrf
+                        <button type="submit"
+                                style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; {{ $isFavorited ? 'background: rgba(138, 28, 36, 0.09); color: rgb(138, 28, 36); border: 1px solid rgba(138, 28, 36, 0.3);' : 'background: rgb(138, 28, 36); color: rgb(251, 248, 243); border: 1px solid rgb(138, 28, 36);' }}">
+                            <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="{{ $isFavorited ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                            </svg>
+                            {{ $isFavorited ? 'Favorited' : 'Favorite' }}
+                        </button>
+                    </form>
+                @endif
+            @endauth
         </div>
     </x-slot>
 
     <div style="padding: 48px 0;">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="max-width: 800px; margin: 0 auto;">
+
+            @if (session('status'))
+                <div style="background: rgba(46, 125, 79, 0.08); color: rgb(46, 125, 79); border: 1px solid rgba(46, 125, 79, 0.2); border-radius: 12px; padding: 12px 16px; margin-bottom: 20px; font-size: 14px; font-weight: 500;">
+                    {{ session('status') }}
+                </div>
+            @endif
 
             {{-- Profile Card --}}
             <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 32px; margin-bottom: 28px;">

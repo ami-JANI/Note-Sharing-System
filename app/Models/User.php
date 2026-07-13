@@ -29,6 +29,7 @@ class User extends Authenticatable
         'status',
         'photo',
         'roll',
+        'phone',
         'current_semester_id',
     ];
 
@@ -88,5 +89,39 @@ class User extends Authenticatable
     public function payments()
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Notes this user has downloaded (distinct, most recent first).
+     */
+    public function downloadedNotes()
+    {
+        return $this->belongsToMany(Note::class, 'note_downloads', 'user_id', 'note_id')->withTimestamps();
+    }
+
+    /**
+     * Uploaders this user has favorited.
+     */
+    public function favoriteUploaders()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'user_id', 'uploader_id')->withTimestamps();
+    }
+
+    /**
+     * Users who have favorited this uploader.
+     */
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'uploader_id', 'user_id')->withTimestamps();
+    }
+
+    public function hasFavorited(User $uploader): bool
+    {
+        return $this->favoriteUploaders()->whereKey($uploader->getKey())->exists();
     }
 }
