@@ -59,6 +59,38 @@
                     @enderror
                 </div>
 
+                {{-- Department --}}
+                <div style="margin-bottom: 24px;">
+                    <label for="department" style="display: block; font-size: 14px; font-weight: 600; color: rgb(27, 42, 74); margin-bottom: 6px;">Department</label>
+                    <select id="department" name="department" required
+                            style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 15px; color: rgb(27, 42, 74); background: white; outline: none;">
+                        <option value="">Select department</option>
+                        @foreach ($departments as $dept)
+                            <option value="{{ $dept }}" {{ old('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                        @endforeach
+                    </select>
+                    @error('department')
+                        <p style="font-size: 13px; color: #e74c3c; margin-top: 4px;">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Semester --}}
+                <div style="margin-bottom: 24px;">
+                    <label for="semester_id" style="display: block; font-size: 14px; font-weight: 600; color: rgb(27, 42, 74); margin-bottom: 6px;">Semester</label>
+                    <select id="semester_id" name="semester_id" required
+                            style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 15px; color: rgb(27, 42, 74); background: white; outline: none;">
+                        <option value="">Select semester</option>
+                        @foreach ($semesters as $semester)
+                            <option value="{{ $semester->id }}" {{ old('semester_id') == $semester->id ? 'selected' : '' }}>
+                                {{ $semester->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                    @error('semester_id')
+                        <p style="font-size: 13px; color: #e74c3c; margin-top: 4px;">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Credit Price --}}
                 <div style="margin-bottom: 24px;">
                     <label for="credit_price" style="display: block; font-size: 14px; font-weight: 600; color: rgb(27, 42, 74); margin-bottom: 6px;">Credit price</label>
