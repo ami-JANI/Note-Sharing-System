@@ -55,7 +55,7 @@
                     <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition
                          class="absolute right-0 mt-2 w-48 rounded-xl shadow-lg py-1 z-50"
                          style="background: white; border: 1px solid rgba(27, 42, 74, 0.1);">
-                        <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm" style="color: rgb(58, 71, 98);">Profile</a>
+                        <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm" style="color: rgb(58, 71, 98);">Profile</a>
                         <a href="{{ route('credits.history') }}" class="block px-4 py-2 text-sm" style="color: rgb(58, 71, 98);">Credit History</a>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -108,7 +108,7 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-base font-medium" style="color: rgb(58, 71, 98);">Profile</a>
+                <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-base font-medium" style="color: rgb(58, 71, 98);">Profile</a>
                 <a href="{{ route('credits.history') }}" class="block px-4 py-2 text-base font-medium" style="color: rgb(58, 71, 98);">Credit History</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

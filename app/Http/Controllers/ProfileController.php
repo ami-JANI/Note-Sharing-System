@@ -14,6 +14,19 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
+     * Display the user's own profile with their info and uploaded notes.
+     */
+    public function show(Request $request): View
+    {
+        $user = $request->user();
+
+        return view('profile.show', [
+            'user' => $user,
+            'notes' => $user->notes()->latest()->get(),
+        ]);
+    }
+
+    /**
      * Display the user's profile form.
      */
     public function edit(Request $request): View
