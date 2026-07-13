@@ -30,6 +30,7 @@
                             <div style="margin-top: 10px; display: grid; grid-template-columns: auto 1fr; gap: 4px 16px; font-size: 14px;">
                                 <span style="color: rgb(91, 104, 133);">Email</span><span style="color: rgb(27, 42, 74);">{{ $user->email }}</span>
                                 <span style="color: rgb(91, 104, 133);">Roll</span><span style="color: rgb(27, 42, 74);">{{ $user->roll ?: 'Not set' }}</span>
+                                <span style="color: rgb(91, 104, 133);">Phone</span><span style="color: rgb(27, 42, 74);">{{ $user->phone ?: 'Not set' }}</span>
                                 <span style="color: rgb(91, 104, 133);">Department</span><span style="color: rgb(27, 42, 74);">{{ $user->department ?: 'Not set' }}</span>
                                 <span style="color: rgb(91, 104, 133);">Batch</span><span style="color: rgb(27, 42, 74);">{{ $user->batch ?: 'Not set' }}</span>
                                 <span style="color: rgb(91, 104, 133);">Semester</span><span style="color: rgb(27, 42, 74);">{{ optional($user->currentSemester)->name ?: 'Not set' }}</span>

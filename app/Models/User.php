@@ -29,6 +29,7 @@ class User extends Authenticatable
         'status',
         'photo',
         'roll',
+        'phone',
         'current_semester_id',
     ];
 

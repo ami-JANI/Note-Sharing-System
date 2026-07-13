@@ -33,6 +33,8 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'roll' => ['required', 'string', 'max:255', 'unique:'.User::class],
+            'phone' => ['required', 'string', 'max:20', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'department' => ['nullable', 'string', 'max:255'],
             'batch' => ['nullable', 'string', 'max:255'],
@@ -41,9 +43,12 @@ class RegisteredUserController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'roll' => $request->roll,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'department' => $request->department,
             'batch' => $request->batch,
+            'credits' => 20,
         ]);
 
         event(new Registered($user));
