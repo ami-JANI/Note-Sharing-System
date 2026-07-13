@@ -13,7 +13,10 @@ class NoteController extends Controller
 {
     public function create()
     {
-        return view('notes.create');
+        return view('notes.create', [
+            'semesters' => \App\Models\Semester::orderBy('order')->get(),
+            'departments' => config('note-sharing.departments'),
+        ]);
     }
 
     public function store(Request $request, NotePreviewService $previews)
@@ -25,6 +28,8 @@ class NoteController extends Controller
             'description' => ['nullable', 'string'],
             'file' => ['required', 'file', 'mimes:pdf,docx', 'max:10240'],
             'credit_price' => ['nullable', 'integer', 'min:0'],
+            'department' => ['nullable', 'string', 'max:255'],
+            'semester_id' => ['nullable', 'exists:semesters,id'],
         ]);
 
         $path = $request->file('file')->store('notes', 'public');
@@ -37,6 +42,8 @@ class NoteController extends Controller
             'description' => $validated['description'] ?? null,
             'file_path' => $path,
             'credit_price' => $validated['credit_price'] ?? 0,
+            'department' => $validated['department'] ?? null,
+            'semester_id' => $validated['semester_id'] ?? null,
             'status' => 'pending',
         ]);
 
