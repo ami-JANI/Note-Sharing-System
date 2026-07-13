@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 
 class BrowseController extends Controller
@@ -24,11 +25,35 @@ class BrowseController extends Controller
             });
         }
 
+        if ($request->filled('department')) {
+            $query->where('department', $request->input('department'));
+        }
+
+        if ($request->filled('semester_id')) {
+            $query->where('semester_id', $request->input('semester_id'));
+        }
+
+        if ($request->filled('price')) {
+            match ($request->input('price')) {
+                'free' => $query->where('credit_price', 0),
+                'paid' => $query->where('credit_price', '>', 0),
+                default => null,
+            };
+        }
+
+        if ($request->filled('min_rating')) {
+            $min = (int) $request->input('min_rating');
+            $query->whereRaw('(SELECT AVG(rating) FROM reviews WHERE note_id = notes.id AND is_hidden = 0) >= ?', [$min]);
+        }
+
         $notes = $query->latest()->paginate(20)->withQueryString();
 
-        // Guests get a login-prompt layout; authenticated users get the full app view.
         $view = auth()->check() ? 'browse.index' : 'browse.guest';
 
-        return view($view, compact('notes'));
+        return view($view, [
+            'notes' => $notes,
+            'departments' => config('note-sharing.departments'),
+            'semesters' => Semester::orderBy('order')->get(),
+        ]);
     }
 }
