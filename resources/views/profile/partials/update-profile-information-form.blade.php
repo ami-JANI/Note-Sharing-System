@@ -27,9 +27,9 @@
 
         <div>
             <label for="email" style="display: block; font-size: 14px; font-weight: 500; color: rgb(27, 42, 74); margin-bottom: 6px;">{{ __('Email') }}</label>
-            <input id="email" name="email" type="email" :value="old('email', $user->email)" required autocomplete="username"
-                   style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(27, 42, 74); background: white; outline: none; transition: border-color 0.15s;"
-                   onfocus="this.style.borderColor='rgb(138, 28, 36)'" onblur="this.style.borderColor='rgba(27, 42, 74, 0.15)'">
+            <input id="email" name="email" type="email" :value="old('email', $user->email)" readonly
+                   style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(138, 150, 174); background: rgba(27, 42, 74, 0.03); cursor: not-allowed;">
+            <p style="font-size: 12px; color: rgb(138, 150, 174); margin-top: 4px;">Email cannot be changed.</p>
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
@@ -72,10 +72,34 @@
 
         <div>
             <label for="roll" style="display: block; font-size: 14px; font-weight: 500; color: rgb(27, 42, 74); margin-bottom: 6px;">{{ __('Roll Number') }}</label>
-            <input id="roll" name="roll" type="text" :value="old('roll', $user->roll)" placeholder="e.g. CS-2024-015" autocomplete="off"
+            <input id="roll" name="roll" type="text" :value="old('roll', $user->roll)" readonly
+                   style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(138, 150, 174); background: rgba(27, 42, 74, 0.03); cursor: not-allowed;">
+            <p style="font-size: 12px; color: rgb(138, 150, 174); margin-top: 4px;">Roll number cannot be changed.</p>
+            <x-input-error class="mt-2" :messages="$errors->get('roll')" />
+        </div>
+
+        <div>
+            <label for="phone" style="display: block; font-size: 14px; font-weight: 500; color: rgb(27, 42, 74); margin-bottom: 6px;">{{ __('Phone Number') }}</label>
+            <input id="phone" name="phone" type="tel" :value="old('phone', $user->phone)" readonly
+                   style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(138, 150, 174); background: rgba(27, 42, 74, 0.03); cursor: not-allowed;">
+            <p style="font-size: 12px; color: rgb(138, 150, 174); margin-top: 4px;">Phone number cannot be changed.</p>
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+        </div>
+
+        <div>
+            <label for="department" style="display: block; font-size: 14px; font-weight: 500; color: rgb(27, 42, 74); margin-bottom: 6px;">{{ __('Department') }}</label>
+            <input id="department" name="department" type="text" :value="old('department', $user->department)" autocomplete="off" placeholder="e.g. Computer Science"
                    style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(27, 42, 74); background: white; outline: none; transition: border-color 0.15s;"
                    onfocus="this.style.borderColor='rgb(138, 28, 36)'" onblur="this.style.borderColor='rgba(27, 42, 74, 0.15)'">
-            <x-input-error class="mt-2" :messages="$errors->get('roll')" />
+            <x-input-error class="mt-2" :messages="$errors->get('department')" />
+        </div>
+
+        <div>
+            <label for="batch" style="display: block; font-size: 14px; font-weight: 500; color: rgb(27, 42, 74); margin-bottom: 6px;">{{ __('Batch') }}</label>
+            <input id="batch" name="batch" type="text" :value="old('batch', $user->batch)" autocomplete="off" placeholder="e.g. 2024"
+                   style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(27, 42, 74); background: white; outline: none; transition: border-color 0.15s;"
+                   onfocus="this.style.borderColor='rgb(138, 28, 36)'" onblur="this.style.borderColor='rgba(27, 42, 74, 0.15)'">
+            <x-input-error class="mt-2" :messages="$errors->get('batch')" />
         </div>
 
         <div>
