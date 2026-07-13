@@ -32,6 +32,16 @@ class NoteUploadTest extends TestCase
         ]);
     }
 
+    public function test_upload_page_is_reachable(): void
+    {
+        $this->actingAs($this->user)->get(route('notes.create'))->assertOk();
+    }
+
+    public function test_guest_cannot_reach_upload_page(): void
+    {
+        $this->get(route('notes.create'))->assertRedirect(route('login'));
+    }
+
     public function test_authenticated_user_can_upload_a_note(): void
     {
         Storage::fake('public');
@@ -39,7 +49,6 @@ class NoteUploadTest extends TestCase
         $file = UploadedFile::fake()->create('notes.pdf', 100);
 
         $response = $this->actingAs($this->user)->post(route('notes.store'), [
-            'subject_id' => $this->subject->id,
             'title' => 'Introduction to Algorithms',
             'course_no' => 'CSE301',
             'course_title' => 'Algorithms',
@@ -51,7 +60,6 @@ class NoteUploadTest extends TestCase
         $response->assertRedirect();
 
         $this->assertDatabaseHas('notes', [
-            'subject_id' => $this->subject->id,
             'uploader_id' => $this->user->id,
             'title' => 'Introduction to Algorithms',
             'course_no' => 'CSE301',
@@ -60,14 +68,13 @@ class NoteUploadTest extends TestCase
         ]);
     }
 
-    public function test_uploaded_note_is_hidden_until_admin_approves(): void
+    public function test_uploaded_note_is_hidden_from_browse_until_admin_approves(): void
     {
         Storage::fake('public');
 
         $file = UploadedFile::fake()->create('notes.pdf', 100);
 
         $this->actingAs($this->user)->post(route('notes.store'), [
-            'subject_id' => $this->subject->id,
             'title' => 'Data Structures Review',
             'course_no' => 'CSE201',
             'course_title' => 'Data Structures',
@@ -75,15 +82,14 @@ class NoteUploadTest extends TestCase
             'file' => $file,
         ]);
 
-        $hidden = $this->actingAs($this->user)->get(route('subjects.show', $this->subject));
+        $hidden = $this->actingAs($this->user)->get(route('browse.index'));
         $hidden->assertDontSee('Data Structures Review');
 
         Note::first()->update(['status' => 'approved']);
 
-        $visible = $this->actingAs($this->user)->get(route('subjects.show', $this->subject));
+        $visible = $this->actingAs($this->user)->get(route('browse.index'));
         $visible->assertOk();
         $visible->assertSee('Data Structures Review');
-        $visible->assertSee(route('notes.download', Note::first()));
     }
 
     public function test_authenticated_user_can_download_a_note(): void

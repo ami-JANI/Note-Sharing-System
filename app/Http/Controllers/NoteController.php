@@ -11,10 +11,14 @@ use Illuminate\Support\Facades\Storage;
 
 class NoteController extends Controller
 {
+    public function create()
+    {
+        return view('notes.create');
+    }
+
     public function store(Request $request, NotePreviewService $previews)
     {
         $validated = $request->validate([
-            'subject_id' => ['required', 'exists:subjects,id'],
             'title' => ['required', 'string', 'max:255'],
             'course_no' => ['required', 'string', 'max:50'],
             'course_title' => ['required', 'string', 'max:255'],
@@ -26,7 +30,6 @@ class NoteController extends Controller
         $path = $request->file('file')->store('notes', 'public');
 
         $note = Note::create([
-            'subject_id' => $validated['subject_id'],
             'uploader_id' => $request->user()->id,
             'title' => $validated['title'],
             'course_no' => $validated['course_no'],

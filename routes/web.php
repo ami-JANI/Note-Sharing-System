@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/semesters/{semester}', [SemesterController::class, 'show'])->name('semesters.show');
     Route::get('/subjects/{subject}', [SubjectController::class, 'show'])->name('subjects.show');
 
+    Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
     Route::get('/notes/{note}', [NoteController::class, 'show'])->name('notes.show');
     Route::get('/notes/{note}/download', [NoteController::class, 'download'])->name('notes.download');
