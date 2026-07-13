@@ -90,4 +90,25 @@ class User extends Authenticatable
     {
         return $this->hasMany(Payment::class);
     }
+
+    /**
+     * Uploaders this user has favorited.
+     */
+    public function favoriteUploaders()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'user_id', 'uploader_id')->withTimestamps();
+    }
+
+    /**
+     * Users who have favorited this uploader.
+     */
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'uploader_id', 'user_id')->withTimestamps();
+    }
+
+    public function hasFavorited(User $uploader): bool
+    {
+        return $this->favoriteUploaders()->whereKey($uploader->getKey())->exists();
+    }
 }

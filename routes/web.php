@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\BrowseController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PreviousQuestionController;
 use App\Http\Controllers\ProfileController;
@@ -38,6 +39,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/previous-questions', [PreviousQuestionController::class, 'store'])->name('previous-questions.store');
     Route::get('/previous-questions/{previousQuestion}/download', [PreviousQuestionController::class, 'download'])->name('previous-questions.download');
+
+    Route::post('/users/{user}/favorite', [FavoriteController::class, 'toggle'])->name('users.favorite');
 
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
