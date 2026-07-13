@@ -10,6 +10,7 @@ class BrowseController extends Controller
     public function index(Request $request)
     {
         $query = Note::where('status', 'approved')
+            ->where('hidden', false)
             ->with(['uploader', 'subject']);
 
         if ($request->filled('q')) {

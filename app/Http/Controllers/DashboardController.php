@@ -9,6 +9,7 @@ class DashboardController extends Controller
     public function index()
     {
         $notes = Note::where('status', 'approved')
+            ->where('hidden', false)
             ->with('uploader')
             ->latest()
             ->get();

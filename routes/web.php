@@ -33,11 +33,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/notes/{note}/download', [NoteController::class, 'download'])->name('notes.download');
     Route::post('/notes/{note}/unlock', [NoteController::class, 'unlock'])->name('notes.unlock');
     Route::post('/notes/{note}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::patch('/notes/{note}/visibility', [NoteController::class, 'toggleVisibility'])->name('notes.visibility');
+    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
     Route::post('/previous-questions', [PreviousQuestionController::class, 'store'])->name('previous-questions.store');
     Route::get('/previous-questions/{previousQuestion}/download', [PreviousQuestionController::class, 'download'])->name('previous-questions.download');
 
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 

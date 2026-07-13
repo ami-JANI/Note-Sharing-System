@@ -56,6 +56,26 @@ class NoteController extends Controller
         return view('notes.show', compact('note'));
     }
 
+    public function destroy(Note $note)
+    {
+        abort_unless($note->uploader_id === auth()->id(), 403);
+
+        Storage::disk('public')->delete($note->file_path);
+
+        $note->delete();
+
+        return back()->with('status', 'Note deleted.');
+    }
+
+    public function toggleVisibility(Note $note)
+    {
+        abort_unless($note->uploader_id === auth()->id(), 403);
+
+        $note->update(['hidden' => ! $note->hidden]);
+
+        return back()->with('status', $note->hidden ? 'Note hidden.' : 'Note is visible again.');
+    }
+
     public function download(Note $note)
     {
         $user = auth()->user();
