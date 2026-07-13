@@ -88,7 +88,6 @@
                                             @if ($user->id !== auth()->id())
                                                 <form method="POST" action="{{ $user->is_suspended ?? false ? route('admin.users.unsuspend', $user) : route('admin.users.suspend', $user) }}" style="display: inline;">
                                                     @csrf
-                                                    @method('PATCH')
                                                     <button type="submit"
                                                             style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background 0.15s; {{ ($user->is_suspended ?? false)
                                                                 ? 'color: rgb(46, 125, 79); background: rgba(46, 125, 79, 0.06); border: 1px solid rgba(46, 125, 79, 0.2);'
