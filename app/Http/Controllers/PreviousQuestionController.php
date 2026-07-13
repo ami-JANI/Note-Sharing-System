@@ -30,6 +30,9 @@ class PreviousQuestionController extends Controller
 
     public function download(PreviousQuestion $previousQuestion)
     {
-        return Storage::disk('public')->download($previousQuestion->file_path, $previousQuestion->year);
+        $extension = pathinfo($previousQuestion->file_path, PATHINFO_EXTENSION);
+        $downloadName = $previousQuestion->year.($extension ? '.'.$extension : '');
+
+        return Storage::disk('public')->download($previousQuestion->file_path, $downloadName);
     }
 }

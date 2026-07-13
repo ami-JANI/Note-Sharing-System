@@ -88,7 +88,7 @@ class PreviousQuestionUploadTest extends TestCase
         $response = $this->actingAs($this->user)->get(route('previous-questions.download', $pq));
 
         $response->assertOk();
-        $response->assertHeader('content-disposition', 'attachment; filename=2024');
+        $response->assertHeader('content-disposition', 'attachment; filename=2024.pdf');
     }
 
     public function test_unauthenticated_user_cannot_upload_previous_question(): void

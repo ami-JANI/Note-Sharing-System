@@ -87,7 +87,10 @@ class NoteController extends Controller
             return back()->withErrors(['note' => 'You must unlock this note first.']);
         }
 
-        return Storage::disk('public')->download($note->file_path, $note->title);
+        $extension = pathinfo($note->file_path, PATHINFO_EXTENSION);
+        $downloadName = $note->title.($extension ? '.'.$extension : '');
+
+        return Storage::disk('public')->download($note->file_path, $downloadName);
     }
 
     public function unlock(Request $request, Note $note)
