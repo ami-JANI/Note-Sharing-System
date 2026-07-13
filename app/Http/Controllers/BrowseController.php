@@ -18,7 +18,9 @@ class BrowseController extends Controller
             $query->where(function ($qry) use ($q) {
                 $qry->where('title', 'like', "%{$q}%")
                     ->orWhere('course_title', 'like', "%{$q}%")
-                    ->orWhere('course_no', 'like', "%{$q}%");
+                    ->orWhere('course_no', 'like', "%{$q}%")
+                    ->orWhere('department', 'like', "%{$q}%")
+                    ->orWhereHas('semester', fn($s) => $s->where('name', 'like', "%{$q}%"));
             });
         }
 
