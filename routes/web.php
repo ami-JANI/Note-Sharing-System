@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\NoteController as AdminNoteController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\BrowseController;
@@ -66,6 +67,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews');
         Route::post('/reviews/{review}/hide', [AdminReviewController::class, 'hide'])->name('reviews.hide');
         Route::post('/reviews/{review}/delete', [AdminReviewController::class, 'delete'])->name('reviews.delete');
+
+        Route::post('/notifications/broadcast', [AdminNotificationController::class, 'broadcast'])->name('notifications.broadcast');
 
         Route::get('/users', [AdminUserController::class, 'index'])->name('users');
         Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
