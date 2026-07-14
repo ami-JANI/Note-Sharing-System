@@ -89,6 +89,11 @@
             <a href="{{ route('credits.buy') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('credits.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
                 Buy Credits
             </a>
+            @if (auth()->user()?->isAdmin())
+                <a href="{{ route('admin.notes.pending') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('admin.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
+                    Admin
+                </a>
+            @endif
         </div>
 
         <div class="pt-4 pb-1" style="border-top: 1px solid rgba(27, 42, 74, 0.08);">
