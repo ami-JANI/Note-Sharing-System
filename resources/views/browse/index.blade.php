@@ -32,16 +32,28 @@
             @endphp
 
             {{-- Two-column layout: filters left, cards right --}}
-            <form method="GET" action="{{ route('browse.index') }}" id="filter-form">
+            <form method="GET" action="{{ route('browse.index') }}" id="filter-form" x-data="{ filtersOpen: false }">
                 {{-- Preserve search query --}}
                 @if ($query)
                     <input type="hidden" name="q" value="{{ $query }}">
                 @endif
 
+                {{-- Mobile-only filter toggle --}}
+                <button type="button" @click="filtersOpen = !filtersOpen" class="mobile-filter-toggle"
+                        style="display: none; align-items: center; gap: 8px; width: 100%; margin-bottom: 16px; padding: 12px 16px; background: white; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 10px; font-size: 14px; font-weight: 600; color: rgb(27, 42, 74); cursor: pointer;">
+                    <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                    Filters
+                    @if ($activeFilterCount > 0)
+                        <span style="display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; border-radius: 50%; background: rgb(138, 28, 36); color: white; font-size: 11px; font-weight: 700;">{{ $activeFilterCount }}</span>
+                    @endif
+                </button>
+
                 <div style="display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: start;">
 
                     {{-- Filter Panel --}}
-                    <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 24px; position: sticky; top: 100px;">
+                    <div class="filter-panel" :class="{ 'filters-collapsed': !filtersOpen }" style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 24px; position: sticky; top: 100px;">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
                             <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 16px; color: rgb(27, 42, 74); display: flex; align-items: center; gap: 8px;">
                                 Filters
@@ -183,6 +195,12 @@
         @media (max-width: 768px) {
             form > div[style*="grid-template-columns: 280px"] {
                 grid-template-columns: 1fr !important;
+            }
+            .mobile-filter-toggle {
+                display: flex !important;
+            }
+            .filter-panel.filters-collapsed {
+                display: none !important;
             }
         }
     </style>
