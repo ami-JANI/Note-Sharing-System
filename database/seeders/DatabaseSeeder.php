@@ -25,9 +25,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $semesters = [
-            'Semester 1' => ['CSE101' => 'Structured Programming', 'MATH101' => 'Calculus I'],
-            'Semester 2' => ['CSE201' => 'Data Structures', 'CSE202' => 'Digital Logic Design'],
-            'Semester 3' => ['CSE301' => 'Algorithms', 'CSE302' => 'Database Systems'],
+            '1-1' => ['CSE101' => 'Structured Programming', 'MATH101' => 'Calculus I'],
+            '1-2' => ['CSE201' => 'Data Structures', 'CSE202' => 'Digital Logic Design'],
+            '2-1' => ['CSE301' => 'Algorithms', 'CSE302' => 'Database Systems'],
+            '2-2' => [],
+            '3-1' => [],
+            '3-2' => [],
+            '4-1' => [],
+            '4-2' => [],
         ];
 
         $order = 0;

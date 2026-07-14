@@ -66,4 +66,25 @@ class BrowseFilterTest extends TestCase
         $r = $this->actingAs(User::factory()->create())->get(route('browse.index', ['q' => 'Note', 'department' => 'CSE']));
         $r->assertSee('Free CSE Note')->assertDontSee('Paid EEE Note');
     }
+
+    public function test_filters_by_course(): void
+    {
+        $r = $this->actingAs(User::factory()->create())->get(route('browse.index', ['course' => 'CSE101']));
+        $r->assertSee('Free CSE Note')->assertDontSee('High Rated')->assertDontSee('Paid EEE Note');
+    }
+
+    public function test_department_and_course_dropdowns_only_list_values_actually_in_use(): void
+    {
+        $r = $this->actingAs(User::factory()->create())->get(route('browse.index'));
+
+        // Departments/courses used by the seeded notes appear as dropdown options.
+        $r->assertSee('<option value="CSE"', false)
+            ->assertSee('<option value="EEE"', false)
+            ->assertSee('<option value="CSE101"', false)
+            ->assertSee('<option value="CSE301"', false)
+            ->assertSee('<option value="EEE201"', false);
+
+        // A department from the master config that no note uses should not appear as a filter option.
+        $r->assertDontSee('<option value="GMAT"', false);
+    }
 }

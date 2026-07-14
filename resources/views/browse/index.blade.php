@@ -28,7 +28,7 @@
 
             @php
                 $query = request('q', '');
-                $activeFilterCount = collect([request('department'), request('semester_id'), request('price'), request('min_rating')])->filter()->count();
+                $activeFilterCount = collect([request('department'), request('course'), request('semester_id'), request('price'), request('min_rating')])->filter()->count();
             @endphp
 
             {{-- Two-column layout: filters left, cards right --}}
@@ -50,7 +50,7 @@
                                 @endif
                             </h3>
                             @if ($activeFilterCount > 0)
-                                <a href="{{ route('browse.index', array_merge(request()->except(['department', 'semester_id', 'price', 'min_rating']), request()->has('q') ? ['q' => request('q')] : [])) }}"
+                                <a href="{{ route('browse.index', array_merge(request()->except(['department', 'course', 'semester_id', 'price', 'min_rating']), request()->has('q') ? ['q' => request('q')] : [])) }}"
                                    style="font-size: 13px; font-weight: 500; color: rgb(138, 28, 36); text-decoration: none; transition: color 0.15s;"
                                    onmouseover="this.style.color='rgb(110, 20, 27)'" onmouseout="this.style.color='rgb(138, 28, 36)'">Reset</a>
                             @endif
@@ -63,18 +63,22 @@
                                     style="width: 100%; padding: 8px 12px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(27, 42, 74); background: white; outline: none; transition: border-color 0.15s;"
                                     onchange="document.getElementById('filter-form').submit()">
                                 <option value="">All departments</option>
-                                @if (isset($departments))
-                                    @foreach ($departments as $dept)
-                                        <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
-                                    @endforeach
-                                @else
-                                    <option value="Computer Science" {{ request('department') == 'Computer Science' ? 'selected' : '' }}>Computer Science</option>
-                                    <option value="Economics" {{ request('department') == 'Economics' ? 'selected' : '' }}>Economics</option>
-                                    <option value="Biology" {{ request('department') == 'Biology' ? 'selected' : '' }}>Biology</option>
-                                    <option value="Mathematics" {{ request('department') == 'Mathematics' ? 'selected' : '' }}>Mathematics</option>
-                                    <option value="Physics" {{ request('department') == 'Physics' ? 'selected' : '' }}>Physics</option>
-                                    <option value="Chemistry" {{ request('department') == 'Chemistry' ? 'selected' : '' }}>Chemistry</option>
-                                @endif
+                                @foreach ($departments as $dept)
+                                    <option value="{{ $dept }}" {{ request('department') == $dept ? 'selected' : '' }}>{{ $dept }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        {{-- Course --}}
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-size: 13px; font-weight: 600; color: rgb(27, 42, 74); margin-bottom: 6px;">Course</label>
+                            <select name="course"
+                                    style="width: 100%; padding: 8px 12px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(27, 42, 74); background: white; outline: none; transition: border-color 0.15s;"
+                                    onchange="document.getElementById('filter-form').submit()">
+                                <option value="">All courses</option>
+                                @foreach ($courses as $courseNo)
+                                    <option value="{{ $courseNo }}" {{ request('course') == $courseNo ? 'selected' : '' }}>{{ $courseNo }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -85,17 +89,11 @@
                                     style="width: 100%; padding: 8px 12px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(27, 42, 74); background: white; outline: none; transition: border-color 0.15s;"
                                     onchange="document.getElementById('filter-form').submit()">
                                 <option value="">All semesters</option>
-                                @if (isset($semesters))
-                                    @foreach ($semesters as $semester)
-                                        <option value="{{ $semester->id }}" {{ request('semester_id') == $semester->id ? 'selected' : '' }}>
-                                            {{ $semester->name }}
-                                        </option>
-                                    @endforeach
-                                @else
-                                    @foreach (range(1, 8) as $sem)
-                                        <option value="{{ $sem }}" {{ request('semester_id') == $sem ? 'selected' : '' }}>Semester {{ $sem }}</option>
-                                    @endforeach
-                                @endif
+                                @foreach ($semesters as $semester)
+                                    <option value="{{ $semester->id }}" {{ request('semester_id') == $semester->id ? 'selected' : '' }}>
+                                        {{ $semester->name }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
 

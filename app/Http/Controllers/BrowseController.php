@@ -29,6 +29,10 @@ class BrowseController extends Controller
             $query->where('department', $request->input('department'));
         }
 
+        if ($request->filled('course')) {
+            $query->where('course_no', $request->input('course'));
+        }
+
         if ($request->filled('semester_id')) {
             $query->where('semester_id', $request->input('semester_id'));
         }
@@ -50,9 +54,15 @@ class BrowseController extends Controller
 
         $view = auth()->check() ? 'browse.index' : 'browse.guest';
 
+        $visibleNotes = Note::where('status', 'approved')->where('hidden', false);
+
         return view($view, [
             'notes' => $notes,
-            'departments' => config('note-sharing.departments'),
+            // Filter options only list departments/courses that at least one
+            // visible note actually uses, not the full master list — no point
+            // offering a department with zero results.
+            'departments' => (clone $visibleNotes)->whereNotNull('department')->distinct()->orderBy('department')->pluck('department'),
+            'courses' => (clone $visibleNotes)->whereNotNull('course_no')->distinct()->orderBy('course_no')->pluck('course_no'),
             'semesters' => Semester::orderBy('order')->get(),
         ]);
     }
