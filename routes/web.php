@@ -52,9 +52,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/credits/history', [CreditController::class, 'history'])->name('credits.history');
 
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/notes', [AdminNoteController::class, 'index'])->name('notes.index');
         Route::get('/notes/pending', [AdminNoteController::class, 'pending'])->name('notes.pending');
         Route::post('/notes/{note}/approve', [AdminNoteController::class, 'approve'])->name('notes.approve');
         Route::post('/notes/{note}/reject', [AdminNoteController::class, 'reject'])->name('notes.reject');
+        Route::delete('/notes/{note}', [AdminNoteController::class, 'destroy'])->name('notes.destroy');
 
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews');
         Route::post('/reviews/{review}/hide', [AdminReviewController::class, 'hide'])->name('reviews.hide');

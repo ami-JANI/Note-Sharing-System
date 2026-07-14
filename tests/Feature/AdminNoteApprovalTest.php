@@ -7,13 +7,14 @@ use App\Models\Semester;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AdminNoteApprovalTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function makeNote(string $status = 'pending'): Note
+    protected function makeNote(string $status = 'pending', string $title = 'Test Note'): Note
     {
         $semester = Semester::create(['name' => 'Semester 1', 'order' => 0]);
         $subject = Subject::create(['semester_id' => $semester->id, 'code' => 'CSE101', 'name' => 'Programming']);
@@ -22,7 +23,7 @@ class AdminNoteApprovalTest extends TestCase
         return Note::create([
             'subject_id' => $subject->id,
             'uploader_id' => $uploader->id,
-            'title' => 'Test Note',
+            'title' => $title,
             'file_path' => 'notes/test.pdf',
             'status' => $status,
         ]);
@@ -81,5 +82,60 @@ class AdminNoteApprovalTest extends TestCase
         $this->actingAs($admin)->post(route('admin.notes.reject', $note))->assertRedirect();
 
         $this->assertEquals('rejected', $note->fresh()->status);
+    }
+
+    public function test_non_admin_cannot_access_all_uploads(): void
+    {
+        $student = User::factory()->create(['role' => 'student']);
+
+        $this->actingAs($student)->get(route('admin.notes.index'))->assertForbidden();
+    }
+
+    public function test_admin_sees_all_uploads_regardless_of_status(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $pending = $this->makeNote('pending', 'Widget Alpha');
+        $approved = $this->makeNote('approved', 'Widget Beta');
+        $rejected = $this->makeNote('rejected', 'Widget Gamma');
+
+        $response = $this->actingAs($admin)->get(route('admin.notes.index'));
+
+        $response->assertOk()
+            ->assertSee($pending->title)
+            ->assertSee($approved->title)
+            ->assertSee($rejected->title);
+    }
+
+    public function test_admin_can_filter_all_uploads_by_status(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $pending = $this->makeNote('pending', 'Widget Alpha');
+        $approved = $this->makeNote('approved', 'Widget Beta');
+
+        $response = $this->actingAs($admin)->get(route('admin.notes.index', ['status' => 'approved']));
+
+        $response->assertOk()->assertSee($approved->title)->assertDontSee($pending->title);
+    }
+
+    public function test_admin_can_delete_any_note_regardless_of_owner_or_status(): void
+    {
+        Storage::fake('public');
+        $admin = User::factory()->create(['role' => 'admin']);
+        $note = $this->makeNote('approved');
+
+        $this->actingAs($admin)->delete(route('admin.notes.destroy', $note))->assertRedirect();
+
+        $this->assertDatabaseMissing('notes', ['id' => $note->id]);
+        Storage::disk('public')->assertMissing($note->file_path);
+    }
+
+    public function test_non_admin_cannot_delete_a_note(): void
+    {
+        $student = User::factory()->create(['role' => 'student']);
+        $note = $this->makeNote('approved');
+
+        $this->actingAs($student)->delete(route('admin.notes.destroy', $note))->assertForbidden();
+
+        $this->assertDatabaseHas('notes', ['id' => $note->id]);
     }
 }
