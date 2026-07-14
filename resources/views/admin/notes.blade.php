@@ -109,6 +109,14 @@
                                                         </button>
                                                     </form>
                                                 @endif
+                                                <form method="POST" action="{{ route('admin.notes.destroy', $note) }}" onsubmit="return confirm('Delete this note permanently? This cannot be undone.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                            style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; font-size: 12px; font-weight: 600; color: rgb(180, 30, 30); background: rgba(180, 30, 30, 0.06); border: 1px solid rgba(180, 30, 30, 0.2); border-radius: 8px; cursor: pointer;">
+                                                        Delete
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

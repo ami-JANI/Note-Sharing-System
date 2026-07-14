@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class NoteController extends Controller
 {
@@ -46,5 +47,17 @@ class NoteController extends Controller
         $note->update(['status' => 'rejected']);
 
         return back()->with('status', 'Note rejected.');
+    }
+
+    /**
+     * Delete any note, regardless of owner or status.
+     */
+    public function destroy(Note $note)
+    {
+        Storage::disk('public')->delete($note->file_path);
+
+        $note->delete();
+
+        return back()->with('status', 'Note deleted.');
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Semester;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class AdminNoteApprovalTest extends TestCase
@@ -114,5 +115,27 @@ class AdminNoteApprovalTest extends TestCase
         $response = $this->actingAs($admin)->get(route('admin.notes.index', ['status' => 'approved']));
 
         $response->assertOk()->assertSee($approved->title)->assertDontSee($pending->title);
+    }
+
+    public function test_admin_can_delete_any_note_regardless_of_owner_or_status(): void
+    {
+        Storage::fake('public');
+        $admin = User::factory()->create(['role' => 'admin']);
+        $note = $this->makeNote('approved');
+
+        $this->actingAs($admin)->delete(route('admin.notes.destroy', $note))->assertRedirect();
+
+        $this->assertDatabaseMissing('notes', ['id' => $note->id]);
+        Storage::disk('public')->assertMissing($note->file_path);
+    }
+
+    public function test_non_admin_cannot_delete_a_note(): void
+    {
+        $student = User::factory()->create(['role' => 'student']);
+        $note = $this->makeNote('approved');
+
+        $this->actingAs($student)->delete(route('admin.notes.destroy', $note))->assertForbidden();
+
+        $this->assertDatabaseHas('notes', ['id' => $note->id]);
     }
 }
