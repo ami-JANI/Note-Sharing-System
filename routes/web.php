@@ -7,6 +7,7 @@ use App\Http\Controllers\BrowseController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PreviousQuestionController;
 use App\Http\Controllers\ProfileController;
@@ -46,6 +47,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{user}', [MessageController::class, 'show'])->name('messages.show');
 
     Route::get('/credits/buy', [CreditController::class, 'create'])->name('credits.buy');
     Route::post('/credits/purchase', [CreditController::class, 'purchase'])->name('credits.purchase');
