@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/credits/history', [CreditController::class, 'history'])->name('credits.history');
 
     Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/notes', [AdminNoteController::class, 'index'])->name('notes.index');
         Route::get('/notes/pending', [AdminNoteController::class, 'pending'])->name('notes.pending');
         Route::post('/notes/{note}/approve', [AdminNoteController::class, 'approve'])->name('notes.approve');
         Route::post('/notes/{note}/reject', [AdminNoteController::class, 'reject'])->name('notes.reject');

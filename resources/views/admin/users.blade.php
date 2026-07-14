@@ -13,6 +13,7 @@
             {{-- Navigation tabs --}}
             <nav style="display: flex; gap: 28px; margin-bottom: 28px; border-bottom: 1px solid rgba(27, 42, 74, 0.1); padding-bottom: 0;">
                 <span style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(138, 28, 36); border-bottom: 2px solid rgb(138, 28, 36);">Users</span>
+                <a href="{{ route('admin.notes.index') }}" style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(91, 104, 133); border-bottom: 2px solid transparent; text-decoration: none; transition: all 0.15s;">All Uploads</a>
                 <a href="{{ route('admin.notes.pending') }}" style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(91, 104, 133); border-bottom: 2px solid transparent; text-decoration: none; transition: all 0.15s;">Pending Notes</a>
             </nav>
 

@@ -1,0 +1,126 @@
+<x-app-layout>
+    <x-slot name="header">
+        <div>
+            <h2 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 28px; color: rgb(27, 42, 74); letter-spacing: -0.02em;">
+                Admin &mdash; All Uploads
+            </h2>
+        </div>
+    </x-slot>
+
+    <div style="padding: 48px 0;">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="max-width: 1000px; margin: 0 auto;">
+
+            {{-- Navigation tabs --}}
+            <nav style="display: flex; gap: 28px; margin-bottom: 28px; border-bottom: 1px solid rgba(27, 42, 74, 0.1); padding-bottom: 0;">
+                <a href="{{ route('admin.users') }}" style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(91, 104, 133); border-bottom: 2px solid transparent; text-decoration: none; transition: all 0.15s;">Users</a>
+                <span style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(138, 28, 36); border-bottom: 2px solid rgb(138, 28, 36);">All Uploads</span>
+                <a href="{{ route('admin.notes.pending') }}" style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(91, 104, 133); border-bottom: 2px solid transparent; text-decoration: none; transition: all 0.15s;">Pending Notes</a>
+            </nav>
+
+            @if (session('status'))
+                <div style="background: rgba(46, 125, 79, 0.06); border: 1px solid rgba(46, 125, 79, 0.2); color: rgb(46, 125, 79); padding: 12px 16px; border-radius: 10px; font-size: 14px; margin-bottom: 24px;">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 28px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                    <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 20px; color: rgb(27, 42, 74);">All Uploads</h3>
+
+                    {{-- Status filter --}}
+                    <div style="display: flex; gap: 6px;">
+                        @foreach (['' => 'All', 'pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected'] as $value => $label)
+                            <a href="{{ route('admin.notes.index', $value ? ['status' => $value] : []) }}"
+                               style="padding: 6px 12px; border-radius: 100px; font-size: 13px; font-weight: 600; text-decoration: none; transition: background 0.15s; {{ request('status', '') === $value ? 'background: rgb(138, 28, 36); color: white;' : 'background: rgba(27, 42, 74, 0.05); color: rgb(58, 71, 98);' }}">
+                                {{ $label }}
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                @if ($notes->isEmpty())
+                    <div style="text-align: center; padding: 48px 0;">
+                        <svg style="margin: 0 auto; width: 48px; height: 48px; color: rgb(91, 104, 133);" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                        </svg>
+                        <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 18px; color: rgb(27, 42, 74); margin-top: 16px;">No uploads</h3>
+                        <p style="font-size: 14px; color: rgb(91, 104, 133); margin-top: 6px;">No notes match this filter.</p>
+                    </div>
+                @else
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(27, 42, 74, 0.08);">
+                                    <th style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: rgb(91, 104, 133); text-transform: uppercase; letter-spacing: 0.05em;">Note</th>
+                                    <th style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: rgb(91, 104, 133); text-transform: uppercase; letter-spacing: 0.05em;">Uploader</th>
+                                    <th style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: rgb(91, 104, 133); text-transform: uppercase; letter-spacing: 0.05em;">Status</th>
+                                    <th style="padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: rgb(91, 104, 133); text-transform: uppercase; letter-spacing: 0.05em;">Uploaded</th>
+                                    <th style="padding: 12px 16px; text-align: right; font-size: 12px; font-weight: 600; color: rgb(91, 104, 133); text-transform: uppercase; letter-spacing: 0.05em;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($notes as $note)
+                                    @php
+                                        [$label, $bg, $fg] = match (true) {
+                                            $note->status === 'pending' => ['Pending', 'rgba(192, 138, 62, 0.1)', '#C08A3E'],
+                                            $note->status === 'rejected' => ['Rejected', 'rgba(180, 30, 30, 0.08)', 'rgb(180, 30, 30)'],
+                                            $note->hidden => ['Approved · Hidden', 'rgba(27, 42, 74, 0.08)', 'rgb(91, 104, 133)'],
+                                            default => ['Approved', 'rgba(46, 125, 79, 0.1)', 'rgb(46, 125, 79)'],
+                                        };
+                                    @endphp
+                                    <tr style="border-bottom: 1px solid rgba(27, 42, 74, 0.06);">
+                                        <td style="padding: 14px 16px;">
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <div style="width: 36px; height: 36px; background: rgba(138, 28, 36, 0.06); color: rgb(138, 28, 36); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                                    <svg style="width: 15px; height: 15px;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                                    </svg>
+                                                </div>
+                                                <div style="min-width: 0;">
+                                                    <div style="font-weight: 600; font-size: 14px; color: rgb(27, 42, 74); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ $note->title }}</div>
+                                                    <div style="font-size: 12px; color: rgb(91, 104, 133);">{{ $note->course_no }} &middot; {{ $note->course_title }}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 14px 16px; font-size: 14px; color: rgb(91, 104, 133);">
+                                            {{ $note->uploader->name ?? '—' }}
+                                        </td>
+                                        <td style="padding: 14px 16px;">
+                                            <span style="display: inline-flex; padding: 3px 10px; border-radius: 100px; font-size: 12px; font-weight: 600; background: {{ $bg }}; color: {{ $fg }};">{{ $label }}</span>
+                                        </td>
+                                        <td style="padding: 14px 16px; font-size: 14px; color: rgb(91, 104, 133);">
+                                            {{ $note->created_at->format('M d, Y') }}
+                                        </td>
+                                        <td style="padding: 14px 16px; text-align: right;">
+                                            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+                                                @if ($note->status === 'pending')
+                                                    <form method="POST" action="{{ route('admin.notes.approve', $note) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                                style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; font-size: 12px; font-weight: 600; color: rgb(46, 125, 79); background: rgba(46, 125, 79, 0.06); border: 1px solid rgba(46, 125, 79, 0.2); border-radius: 8px; cursor: pointer;">
+                                                            Approve
+                                                        </button>
+                                                    </form>
+                                                    <form method="POST" action="{{ route('admin.notes.reject', $note) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                                style="display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; font-size: 12px; font-weight: 600; color: rgb(180, 30, 30); background: rgba(180, 30, 30, 0.06); border: 1px solid rgba(180, 30, 30, 0.2); border-radius: 8px; cursor: pointer;">
+                                                            Reject
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        {{ $notes->links() }}
+                    </div>
+                @endif
+            </div>
+        </div>
+    </div>
+</x-app-layout>
