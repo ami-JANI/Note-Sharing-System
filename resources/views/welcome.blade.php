@@ -30,7 +30,7 @@
         <a href="#features" style="color: rgb(58, 71, 98); font-size: 15px; font-weight: 500;">Features</a>
         <a href="#courses" style="color: rgb(58, 71, 98); font-size: 15px; font-weight: 500;">Courses</a>
         <a href="{{ route('login') }}" style="color: rgb(58, 71, 98); font-size: 15px; font-weight: 500;">Log in</a>
-        <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" style="background: rgb(138, 28, 36); color: rgb(251, 248, 243); padding: 10px 20px; border-radius: 8px; font-size: 15px; font-weight: 600;">Browse notes</a>
+        <a href="{{ route('browse.index') }}" style="background: rgb(138, 28, 36); color: rgb(251, 248, 243); padding: 10px 20px; border-radius: 8px; font-size: 15px; font-weight: 600;">Browse notes</a>
       </div>
     </nav>
   </header>
@@ -44,8 +44,8 @@
       <h1 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 60px; line-height: 1.04; letter-spacing: -0.02em; color: rgb(27, 42, 74); text-wrap: balance;">Every lecture, every course &mdash; notes you can trust.</h1>
       <p style="margin-top: 24px; font-size: 19px; line-height: 1.6; color: rgb(58, 71, 98); max-width: 500px;">UniNotes is the shared library where students find peer-reviewed study notes, search by course and semester, and share what they've learned with others.</p>
       <div style="display: flex; gap: 14px; margin-top: 34px; flex-wrap: wrap;">
-        <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" style="background: rgb(138, 28, 36); color: rgb(251, 248, 243); padding: 15px 28px; border-radius: 9px; font-size: 16px; font-weight: 600;">Browse notes</a>
-        <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" style="background: transparent; color: rgb(27, 42, 74); padding: 15px 28px; border-radius: 9px; font-size: 16px; font-weight: 600; border: 1.5px solid rgba(27, 42, 74, 0.2);">Upload your notes</a>
+        <a href="{{ route('browse.index') }}" style="background: rgb(138, 28, 36); color: rgb(251, 248, 243); padding: 15px 28px; border-radius: 9px; font-size: 16px; font-weight: 600;">Browse notes</a>
+        <a href="{{ auth()->check() ? route('notes.create') : route('register') }}" style="background: transparent; color: rgb(27, 42, 74); padding: 15px 28px; border-radius: 9px; font-size: 16px; font-weight: 600; border: 1.5px solid rgba(27, 42, 74, 0.2);">Upload your notes</a>
       </div>
     </div>
 
@@ -145,7 +145,7 @@
         <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(138, 28, 36); margin-bottom: 14px;">Popular right now</div>
         <h2 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 42px; line-height: 1.1; letter-spacing: -0.02em;">The courses students are studying this week</h2>
       </div>
-      <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" style="font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 7px;">Browse all courses &rarr;</a>
+      <a href="{{ route('browse.index') }}" style="font-size: 15px; font-weight: 600; display: inline-flex; align-items: center; gap: 7px;">Browse all courses &rarr;</a>
     </div>
     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;">
       @foreach ([
@@ -156,7 +156,7 @@
           ['code' => 'MATH 220', 'title' => 'Linear Algebra', 'dept' => 'Mathematics', 'notes' => 141],
           ['code' => 'CHEM 130', 'title' => 'Organic Chemistry I', 'dept' => 'Chemistry', 'notes' => 128],
       ] as $course)
-        <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" style="display: block; background: rgb(255, 255, 255); border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 15px; padding: 26px; color: rgb(27, 42, 74);">
+        <a href="{{ route('browse.index') }}" style="display: block; background: rgb(255, 255, 255); border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 15px; padding: 26px; color: rgb(27, 42, 74);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
             <span style="font-size: 13px; font-weight: 700; color: rgb(138, 28, 36); letter-spacing: 0.03em;">{{ $course['code'] }}</span>
             <span style="font-size: 12px; color: rgb(91, 104, 133);">{{ $course['notes'] }} notes</span>
@@ -200,8 +200,8 @@
       <h2 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 46px; line-height: 1.1; letter-spacing: -0.02em; max-width: 640px; margin: 0px auto; text-wrap: balance;">Your next A is sitting in someone's notebook.</h2>
       <p style="margin: 20px auto 0px; font-size: 18px; line-height: 1.6; color: rgba(251, 248, 243, 0.82); max-width: 520px;">Join thousands of students sharing the notes that actually help. Free to browse, rewarding to contribute.</p>
       <div style="display: flex; gap: 14px; justify-content: center; margin-top: 36px; flex-wrap: wrap;">
-        <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" style="background: rgb(251, 248, 243); color: rgb(138, 28, 36); padding: 15px 30px; border-radius: 9px; font-size: 16px; font-weight: 700;">Browse notes</a>
-        <a href="{{ auth()->check() ? route('dashboard') : route('register') }}" style="background: rgba(251, 248, 243, 0.14); color: rgb(251, 248, 243); padding: 15px 30px; border-radius: 9px; font-size: 16px; font-weight: 600; border: 1px solid rgba(251, 248, 243, 0.3);">Upload your notes</a>
+        <a href="{{ route('browse.index') }}" style="background: rgb(251, 248, 243); color: rgb(138, 28, 36); padding: 15px 30px; border-radius: 9px; font-size: 16px; font-weight: 700;">Browse notes</a>
+        <a href="{{ auth()->check() ? route('notes.create') : route('register') }}" style="background: rgba(251, 248, 243, 0.14); color: rgb(251, 248, 243); padding: 15px 30px; border-radius: 9px; font-size: 16px; font-weight: 600; border: 1px solid rgba(251, 248, 243, 0.3);">Upload your notes</a>
       </div>
     </div>
   </section>
