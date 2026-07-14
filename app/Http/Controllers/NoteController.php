@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Note;
 use App\Models\NotePurchase;
 use App\Models\Subject;
+use App\Notifications\NotePurchasedNotification;
 use App\Services\NotePreviewService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -133,6 +134,8 @@ class NoteController extends Controller
             'user_id' => $user->id,
             'credits_spent' => $note->credit_price,
         ]);
+
+        $note->uploader->notify(new NotePurchasedNotification($note, $user, (int) round($note->credit_price * 0.1)));
 
         return back()->with('status', 'Note unlocked.');
     }
