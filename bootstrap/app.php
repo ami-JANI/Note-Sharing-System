@@ -15,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias(['admin' => EnsureUserIsAdmin::class]);
         $middleware->appendToGroup('web', EnsureUserIsNotSuspended::class);
+        // Fly.io terminates TLS at its edge and forwards over HTTP internally;
+        // trust its proxy so url()/redirect() generate https:// links instead
+        // of leaking the internal http:// scheme.
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
