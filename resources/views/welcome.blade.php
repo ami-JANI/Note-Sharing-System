@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>UniNotes - Every lecture, every course, notes you can trust</title>
+  <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
   <link rel="preconnect" href="https://fonts.bunny.net">
   <link href="https://fonts.bunny.net/css?family=public-sans:400,500,600,700|source-serif-4:400,500,600,700" rel="stylesheet" />
   <style>
