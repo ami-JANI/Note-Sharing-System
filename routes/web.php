@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/reviews/{review}/hide', [AdminReviewController::class, 'hide'])->name('reviews.hide');
         Route::post('/reviews/{review}/delete', [AdminReviewController::class, 'delete'])->name('reviews.delete');
 
+        Route::get('/notifications/broadcast', [AdminNotificationController::class, 'create'])->name('broadcast');
         Route::post('/notifications/broadcast', [AdminNotificationController::class, 'broadcast'])->name('notifications.broadcast');
 
         Route::get('/users', [AdminUserController::class, 'index'])->name('users');
