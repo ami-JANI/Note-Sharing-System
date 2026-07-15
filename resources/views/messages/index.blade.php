@@ -11,9 +11,9 @@
     <div style="padding: 48px 0;">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="max-width: 720px; margin: 0 auto;">
 
-            {{-- Dummy data until sazzathrafee's backend merges --}}
+            {{-- Falls back to dummy data if the backend didn't pass any conversations --}}
             @php
-                $conversations = $conversations ?? collect([
+                $conversations = $messages ?? collect([
                     (object) [
                         'id' => 1,
                         'partner' => (object) ['id' => 2, 'name' => 'Daniel Reyes', 'photo' => null],
