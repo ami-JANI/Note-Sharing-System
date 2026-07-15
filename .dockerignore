@@ -2,10 +2,14 @@
 .github
 node_modules
 vendor
+public/storage
+public/build
+bootstrap/cache/*.php
 storage/app/public/*
 !storage/app/public/.gitignore
 storage/framework/cache/*
 storage/framework/sessions/*
+storage/framework/testing/*
 storage/framework/views/*
 storage/logs/*
 !storage/logs/.gitignore

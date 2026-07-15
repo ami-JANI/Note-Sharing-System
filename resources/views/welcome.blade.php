@@ -13,6 +13,40 @@
     a { color: #8A1C24; text-decoration: none; }
     a:hover { color: #6E141B; }
     ::selection { background: #8A1C24; color: #FBF8F3; }
+
+    @media (max-width: 768px) {
+      /* Nav: drop the in-page jump links, keep logo + primary actions */
+      nav a[href="#how"], nav a[href="#features"], nav a[href="#courses"] { display: none !important; }
+      nav[style] { padding: 14px 20px !important; }
+      nav > div[style*="gap: 34px"] { gap: 14px !important; }
+
+      /* All the fixed multi-column grids collapse to one column */
+      [style*="grid-template-columns: 1.05fr 0.95fr"],
+      [style*="grid-template-columns: repeat(4, 1fr)"],
+      [style*="grid-template-columns: repeat(3, 1fr)"],
+      [style*="grid-template-columns: repeat(2, 1fr)"] {
+        grid-template-columns: 1fr !important;
+      }
+
+      /* Section padding: 40px horizontal is too much on a narrow screen */
+      [style*="padding: 88px 40px"],
+      [style*="padding: 96px 40px"],
+      [style*="padding: 36px 40px"],
+      [style*="padding: 48px 40px"] {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+      }
+
+      /* Oversized headline/heading font sizes */
+      h1[style*="font-size: 60px"] { font-size: 34px !important; }
+      h2[style*="font-size: 42px"] { font-size: 28px !important; }
+      h2[style*="font-size: 46px"] { font-size: 30px !important; }
+
+      /* Hero illustration: fixed-height absolute-positioned cards don't
+         fit a narrow viewport, so drop it and let the hero text lead */
+      #top { grid-template-columns: 1fr !important; }
+      #top > div[style*="position: relative"] { display: none !important; }
+    }
   </style>
 </head>
 <body>
