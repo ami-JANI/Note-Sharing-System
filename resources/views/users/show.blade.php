@@ -6,17 +6,55 @@
             </h2>
             @auth
                 @if (auth()->id() !== $user->id)
-                    @php($isFavorited = auth()->user()->hasFavorited($user))
-                    <form method="POST" action="{{ route('users.favorite', $user) }}">
-                        @csrf
-                        <button type="submit"
-                                style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; {{ $isFavorited ? 'background: rgba(138, 28, 36, 0.09); color: rgb(138, 28, 36); border: 1px solid rgba(138, 28, 36, 0.3);' : 'background: rgb(138, 28, 36); color: rgb(251, 248, 243); border: 1px solid rgb(138, 28, 36);' }}">
-                            <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="{{ $isFavorited ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                    <div x-data="{ composeOpen: false }" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        {{-- Message Button --}}
+                        <button @click="composeOpen = !composeOpen"
+                                style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; background: rgba(27, 42, 74, 0.06); color: rgb(27, 42, 74); border: 1px solid rgba(27, 42, 74, 0.15);"
+                                onmouseover="this.style.borderColor='rgba(27, 42, 74, 0.3)'" onmouseout="this.style.borderColor='rgba(27, 42, 74, 0.15)'">
+                            <svg style="width: 15px; height: 15px;" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                             </svg>
-                            {{ $isFavorited ? 'Favorited' : 'Favorite' }}
+                            Message
                         </button>
-                    </form>
+
+                        {{-- Favorite Button --}}
+                        @php($isFavorited = auth()->user()->hasFavorited($user))
+                        <form method="POST" action="{{ route('users.favorite', $user) }}" style="display: inline;">
+                            @csrf
+                            <button type="submit"
+                                    style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.15s; {{ $isFavorited ? 'background: rgba(138, 28, 36, 0.09); color: rgb(138, 28, 36); border: 1px solid rgba(138, 28, 36, 0.3);' : 'background: rgb(138, 28, 36); color: rgb(251, 248, 243); border: 1px solid rgb(138, 28, 36);' }}">
+                                <svg style="width: 15px; height: 15px;" viewBox="0 0 24 24" fill="{{ $isFavorited ? 'currentColor' : 'none' }}" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.562.562 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                </svg>
+                                {{ $isFavorited ? 'Favorited' : 'Favorite' }}
+                            </button>
+                        </form>
+
+                        {{-- Compose Box --}}
+                        <div x-show="composeOpen" x-transition x-cloak
+                             style="width: 100%; background: white; border: 1px solid rgba(27, 42, 74, 0.12); border-radius: 12px; padding: 16px; margin-top: 4px;">
+                            <form method="POST" action="{{ route('messages.store') }}">
+                                @csrf
+                                <input type="hidden" name="recipient_id" value="{{ $user->id }}">
+                                <label style="display: block; font-size: 13px; font-weight: 600; color: rgb(27, 42, 74); margin-bottom: 6px;">Send a message to {{ $user->name }}</label>
+                                <textarea name="body" rows="3" required placeholder="Write your message..."
+                                          style="width: 100%; padding: 10px 14px; border: 1px solid rgba(27, 42, 74, 0.15); border-radius: 8px; font-size: 14px; color: rgb(27, 42, 74); outline: none; resize: vertical; font-family: 'Public Sans', sans-serif; transition: border-color 0.15s;"
+                                          onfocus="this.style.borderColor='rgb(138, 28, 36)'" onblur="this.style.borderColor='rgba(27, 42, 74, 0.15)'"></textarea>
+                                <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+                                    <button type="button" @click="composeOpen = false"
+                                            style="padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; background: transparent; color: rgb(91, 104, 133); border: 1px solid rgba(27, 42, 74, 0.12); transition: all 0.15s;"
+                                            onmouseover="this.style.borderColor='rgba(27, 42, 74, 0.3)'" onmouseout="this.style.borderColor='rgba(27, 42, 74, 0.12)'">
+                                        Cancel
+                                    </button>
+                                    <button type="submit"
+                                            style="padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; background: rgb(138, 28, 36); color: rgb(251, 248, 243); border: none; transition: background 0.15s;"
+                                            onmouseover="this.style.background='rgb(110, 20, 27)'" onmouseout="this.style.background='rgb(138, 28, 36)'">
+                                        Send
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 @endif
             @endauth
         </div>
@@ -105,4 +143,6 @@
             </div>
         </div>
     </div>
+
+    <style>[x-cloak] { display: none !important; }</style>
 </x-app-layout>
