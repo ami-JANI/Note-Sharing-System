@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Notification;
 
 class NotificationController extends Controller
 {
+    public function create()
+    {
+        return view('admin.broadcast', ['users' => User::orderBy('name')->get()]);
+    }
+
     public function broadcast(Request $request)
     {
         $validated = $request->validate([

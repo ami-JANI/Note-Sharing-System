@@ -15,6 +15,7 @@
                 <a href="{{ route('admin.users') }}" style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(91, 104, 133); border-bottom: 2px solid transparent; text-decoration: none; transition: all 0.15s;">Users</a>
                 <a href="{{ route('admin.notes.index') }}" style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(91, 104, 133); border-bottom: 2px solid transparent; text-decoration: none; transition: all 0.15s;">All Uploads</a>
                 <span style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(138, 28, 36); border-bottom: 2px solid rgb(138, 28, 36);">Pending Notes</span>
+                <a href="{{ route('admin.broadcast') }}" style="padding-bottom: 12px; font-size: 15px; font-weight: 600; color: rgb(91, 104, 133); border-bottom: 2px solid transparent; text-decoration: none; transition: all 0.15s;">Broadcast</a>
             </nav>
 
             @if (session('status'))
