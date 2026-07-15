@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use App\Models\Review;
+use App\Notifications\NewReviewNotification;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
@@ -19,11 +20,13 @@ class ReviewController extends Controller
             return back()->withErrors(['purchase' => 'You must unlock this note before reviewing it.']);
         }
 
-        $note->reviews()->create([
+        $review = $note->reviews()->create([
             'user_id' => $request->user()->id,
             'rating' => $data['rating'],
             'comment' => $data['comment'],
         ]);
+
+        $note->uploader->notify(new NewReviewNotification($note, $review, $request->user()));
 
         return back()->with('status', 'Review submitted successfully.');
     }

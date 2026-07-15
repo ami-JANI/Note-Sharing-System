@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\NoteController as AdminNoteController;
+use App\Http\Controllers\Admin\NotificationController as AdminNotificationController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\BrowseController;
 use App\Http\Controllers\CreditController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PreviousQuestionController;
 use App\Http\Controllers\ProfileController;
@@ -47,6 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/{user}', [MessageController::class, 'show'])->name('messages.show');
+
     Route::get('/credits/buy', [CreditController::class, 'create'])->name('credits.buy');
     Route::post('/credits/purchase', [CreditController::class, 'purchase'])->name('credits.purchase');
     Route::get('/credits/history', [CreditController::class, 'history'])->name('credits.history');
@@ -61,6 +67,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews');
         Route::post('/reviews/{review}/hide', [AdminReviewController::class, 'hide'])->name('reviews.hide');
         Route::post('/reviews/{review}/delete', [AdminReviewController::class, 'delete'])->name('reviews.delete');
+
+        Route::post('/notifications/broadcast', [AdminNotificationController::class, 'broadcast'])->name('notifications.broadcast');
 
         Route::get('/users', [AdminUserController::class, 'index'])->name('users');
         Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
