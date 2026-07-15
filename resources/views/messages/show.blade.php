@@ -8,15 +8,15 @@
                 </svg>
             </a>
             <div style="display: flex; align-items: center; gap: 12px;">
-                @if ($partner->photo ?? null)
-                    <img src="{{ Storage::url($partner->photo) }}" alt="{{ $partner->name }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+                @if ($user->photo ?? null)
+                    <img src="{{ Storage::url($user->photo) }}" alt="{{ $user->name }}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
                 @else
                     <div style="width: 40px; height: 40px; border-radius: 50%; background: rgba(138, 28, 36, 0.09); color: rgb(138, 28, 36); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; font-family: 'Source Serif 4', serif;">
-                        {{ strtoupper(substr($partner->name, 0, 1)) }}
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
                     </div>
                 @endif
                 <div>
-                    <h2 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 20px; color: rgb(27, 42, 74); line-height: 1.2;">{{ $partner->name }}</h2>
+                    <h2 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 20px; color: rgb(27, 42, 74); line-height: 1.2;">{{ $user->name }}</h2>
                 </div>
             </div>
         </div>
@@ -25,9 +25,9 @@
     <div style="padding: 0 0 24px;">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8" style="max-width: 720px; margin: 0 auto;">
 
-            {{-- Dummy data until sazzathrafee's backend merges --}}
+            {{-- Falls back to dummy data if the backend didn't pass a conversation partner --}}
             @php
-                $partner = $partner ?? (object) ['id' => 2, 'name' => 'Daniel Reyes', 'photo' => null];
+                $partner = $user ?? (object) ['id' => 2, 'name' => 'Daniel Reyes', 'photo' => null];
                 $messages = $messages ?? collect([
                     (object) ['id' => 1, 'sender_id' => 2, 'body' => 'Hey, do you have the solutions for Problem Set 3?', 'created_at' => now()->subHours(2)],
                     (object) ['id' => 2, 'sender_id' => auth()->id(), 'body' => 'Yeah, I finished it last night. Which question are you stuck on?', 'created_at' => now()->subHours(1)->addMinutes(45)],
