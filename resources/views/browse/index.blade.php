@@ -50,7 +50,7 @@
                     @endif
                 </button>
 
-                <div style="display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: start;">
+                <div style="display: grid; grid-template-columns: 280px 1fr 260px; gap: 28px; align-items: start;">
 
                     {{-- Filter Panel --}}
                     <div class="filter-panel" :class="{ 'filters-collapsed': !filtersOpen }" style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 24px; position: sticky; top: 100px;">
@@ -184,6 +184,33 @@
                             </div>
                         @endif
                     </div>
+
+                    {{-- Top Uploader Sidebar --}}
+                    @if ($topUploader ?? null)
+                        <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 24px; position: sticky; top: 100px;">
+                            <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 15px; color: rgb(27, 42, 74); margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                                <svg style="width: 16px; height: 16px; color: #C08A3E;" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                Top Uploader
+                            </h3>
+                            <a href="{{ route('profiles.show', $topUploader) }}" style="display: flex; flex-direction: column; align-items: center; text-decoration: none; text-align: center; padding: 12px 0; transition: opacity 0.15s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                                @if ($topUploader->photo)
+                                    <img src="{{ Storage::url($topUploader->photo) }}" alt="{{ $topUploader->name }}" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid rgba(27, 42, 74, 0.08);">
+                                @else
+                                    <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(138, 28, 36, 0.09); color: rgb(138, 28, 36); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 24px; font-family: 'Source Serif 4', serif; margin-bottom: 10px; border: 2px solid rgba(27, 42, 74, 0.08);">
+                                        {{ strtoupper(substr($topUploader->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                                <span style="font-weight: 600; font-size: 15px; color: rgb(27, 42, 74);">{{ $topUploader->name }}</span>
+                                <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+                                    <svg style="width: 14px; height: 14px; color: #C08A3E;" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                    <span style="font-size: 14px; font-weight: 600; color: #C08A3E;">{{ number_format($topUploader->avg_rating, 1) }}</span>
+                                </div>
+                                @if ($topUploader->department)
+                                    <span style="font-size: 13px; color: rgb(91, 104, 133); margin-top: 4px;">{{ $topUploader->department }}</span>
+                                @endif
+                            </a>
+                        </div>
+                    @endif
 
                 </div>
             </form>
