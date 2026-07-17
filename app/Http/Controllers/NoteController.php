@@ -33,7 +33,14 @@ class NoteController extends Controller
             'semester_id' => ['nullable', 'exists:semesters,id'],
         ]);
 
-        $path = $request->file('file')->store('notes', 'public');
+        $file = $request->file('file');
+        $fileHash = hash_file('sha256', $file->getRealPath());
+
+        if (Note::where('file_hash', $fileHash)->exists()) {
+            return back()->withErrors(['file' => 'This file has already been uploaded.'])->withInput();
+        }
+
+        $path = $file->store('notes', 'public');
 
         $note = Note::create([
             'uploader_id' => $request->user()->id,
@@ -42,6 +49,7 @@ class NoteController extends Controller
             'course_title' => $validated['course_title'],
             'description' => $validated['description'] ?? null,
             'file_path' => $path,
+            'file_hash' => $fileHash,
             'credit_price' => $validated['credit_price'] ?? 0,
             'department' => $validated['department'] ?? null,
             'semester_id' => $validated['semester_id'] ?? null,
