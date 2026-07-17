@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-public-layout>
     {{-- Header --}}
     <div style="text-align: center; margin-bottom: 32px;">
         <h1 style="font-family: 'Source Serif 4', serif; font-weight: 700; font-size: 32px; color: rgb(27, 42, 74); letter-spacing: -0.02em;">
@@ -65,4 +65,4 @@
             {{ $notes->links() }}
         </div>
     @endif
-</x-guest-layout>
+</x-public-layout>
