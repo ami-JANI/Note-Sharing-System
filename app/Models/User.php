@@ -124,4 +124,5 @@ class User extends Authenticatable
     {
         return $this->favoriteUploaders()->whereKey($uploader->getKey())->exists();
     }
+
 }

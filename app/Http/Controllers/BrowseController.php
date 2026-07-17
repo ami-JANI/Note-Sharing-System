@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Note;
+use App\Models\Review;
 use App\Models\Semester;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class BrowseController extends Controller
@@ -56,8 +58,30 @@ class BrowseController extends Controller
 
         $visibleNotes = Note::where('status', 'approved')->where('hidden', false);
 
+        $topUploader = User::select('users.*')
+            ->selectRaw('AVG(reviews.rating) as avg_rating')
+            ->join('notes', 'notes.uploader_id', '=', 'users.id')
+            ->join('reviews', 'reviews.note_id', '=', 'notes.id')
+            ->where('reviews.is_hidden', false)
+            ->where('reviews.created_at', '>=', now()->subDays(7))
+            ->groupBy('users.id')
+            ->orderByDesc('avg_rating')
+            ->first();
+
+        if (! $topUploader) {
+            $topUploader = User::select('users.*')
+                ->selectRaw('AVG(reviews.rating) as avg_rating')
+                ->join('notes', 'notes.uploader_id', '=', 'users.id')
+                ->join('reviews', 'reviews.note_id', '=', 'notes.id')
+                ->where('reviews.is_hidden', false)
+                ->groupBy('users.id')
+                ->orderByDesc('avg_rating')
+                ->first();
+        }
+
         return view($view, [
             'notes' => $notes,
+            'topUploader' => $topUploader,
             // Filter options only list departments/courses that at least one
             // visible note actually uses, not the full master list — no point
             // offering a department with zero results.
