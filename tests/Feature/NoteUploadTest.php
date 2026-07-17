@@ -245,4 +245,57 @@ class NoteUploadTest extends TestCase
         $response->assertSessionHas('status', 'Note uploaded and awaiting admin approval.');
         $this->assertDatabaseHas('notes', ['title' => 'DOCX Allowed']);
     }
+
+    public function test_duplicate_file_is_rejected_by_hash(): void
+    {
+        Storage::fake('public');
+
+        $file = UploadedFile::fake()->create('duplicate.pdf', 100);
+
+        $this->actingAs($this->user)->post(route('notes.store'), [
+            'title' => 'First upload',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
+            'file' => $file,
+        ]);
+
+        $this->assertDatabaseHas('notes', ['title' => 'First upload']);
+
+        $response = $this->actingAs($this->user)->post(route('notes.store'), [
+            'title' => 'Second upload',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
+            'file' => $file,
+        ]);
+
+        $response->assertSessionHasErrors('file');
+        $this->assertDatabaseMissing('notes', ['title' => 'Second upload']);
+        $this->assertDatabaseCount('notes', 1);
+    }
+
+    public function test_different_files_both_succeed(): void
+    {
+        Storage::fake('public');
+
+        $fileA = UploadedFile::fake()->createWithContent('a.pdf', 'unique content A for hash test');
+        $fileB = UploadedFile::fake()->createWithContent('b.pdf', 'unique content B for hash test');
+
+        $this->actingAs($this->user)->post(route('notes.store'), [
+            'title' => 'File A',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
+            'file' => $fileA,
+        ]);
+
+        $this->actingAs($this->user)->post(route('notes.store'), [
+            'title' => 'File B',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
+            'file' => $fileB,
+        ]);
+
+        $this->assertDatabaseHas('notes', ['title' => 'File A']);
+        $this->assertDatabaseHas('notes', ['title' => 'File B']);
+        $this->assertDatabaseCount('notes', 2);
+    }
 }
