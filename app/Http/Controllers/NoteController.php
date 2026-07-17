@@ -56,9 +56,12 @@ class NoteController extends Controller
             'status' => 'pending',
         ]);
 
-        // Best-effort preview generation (no-op if the file isn't a PDF or
-        // Ghostscript isn't installed).
         $previews->generate($note);
+
+        $uploadCount = Note::where('uploader_id', $request->user()->id)->count();
+        if ($uploadCount % 5 === 0) {
+            $request->user()->increment('credits', 10);
+        }
 
         return back()->with('status', 'Note uploaded and awaiting admin approval.');
     }

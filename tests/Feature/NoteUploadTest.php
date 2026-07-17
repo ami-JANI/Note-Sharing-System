@@ -246,6 +246,57 @@ class NoteUploadTest extends TestCase
         $this->assertDatabaseHas('notes', ['title' => 'DOCX Allowed']);
     }
 
+    public function test_credit_milestone_every_5_uploads(): void
+    {
+        Storage::fake('public');
+
+        $this->assertEquals(0, $this->user->fresh()->credits);
+
+        // Upload 4 notes — no credit change.
+        for ($i = 1; $i <= 4; $i++) {
+            $file = UploadedFile::fake()->createWithContent("note{$i}.pdf", "content $i");
+            $this->actingAs($this->user)->post(route('notes.store'), [
+                'title' => "Note $i",
+                'course_no' => 'CSE101',
+                'course_title' => 'Programming',
+                'file' => $file,
+            ]);
+            $this->assertEquals(0, $this->user->fresh()->credits);
+        }
+
+        // 5th upload — +10 credits.
+        $file5 = UploadedFile::fake()->createWithContent('note5.pdf', 'content 5');
+        $this->actingAs($this->user)->post(route('notes.store'), [
+            'title' => 'Note 5',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
+            'file' => $file5,
+        ]);
+        $this->assertEquals(10, $this->user->fresh()->credits);
+
+        // Upload 6th–9th — no change.
+        for ($i = 6; $i <= 9; $i++) {
+            $file = UploadedFile::fake()->createWithContent("note{$i}.pdf", "content $i");
+            $this->actingAs($this->user)->post(route('notes.store'), [
+                'title' => "Note $i",
+                'course_no' => 'CSE101',
+                'course_title' => 'Programming',
+                'file' => $file,
+            ]);
+            $this->assertEquals(10, $this->user->fresh()->credits);
+        }
+
+        // 10th upload — +10 again.
+        $file10 = UploadedFile::fake()->createWithContent('note10.pdf', 'content 10');
+        $this->actingAs($this->user)->post(route('notes.store'), [
+            'title' => 'Note 10',
+            'course_no' => 'CSE101',
+            'course_title' => 'Programming',
+            'file' => $file10,
+        ]);
+        $this->assertEquals(20, $this->user->fresh()->credits);
+    }
+
     public function test_duplicate_file_is_rejected_by_hash(): void
     {
         Storage::fake('public');
