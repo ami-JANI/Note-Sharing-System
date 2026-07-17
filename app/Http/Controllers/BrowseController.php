@@ -58,25 +58,31 @@ class BrowseController extends Controller
 
         $visibleNotes = Note::where('status', 'approved')->where('hidden', false);
 
-        $topUploader = User::select('users.*')
-            ->selectRaw('AVG(reviews.rating) as avg_rating')
-            ->join('notes', 'notes.uploader_id', '=', 'users.id')
-            ->join('reviews', 'reviews.note_id', '=', 'notes.id')
+        // Aggregate on uploader_id only (not users.*) so this stays valid
+        // under MySQL's default ONLY_FULL_GROUP_BY mode -- selecting
+        // non-aggregated, non-grouped-by columns like users.name errors
+        // there even though SQLite (used in tests) silently allows it.
+        $topUploaderRow = Note::join('reviews', 'reviews.note_id', '=', 'notes.id')
             ->where('reviews.is_hidden', false)
             ->where('reviews.created_at', '>=', now()->subDays(7))
-            ->groupBy('users.id')
+            ->selectRaw('notes.uploader_id, AVG(reviews.rating) as avg_rating')
+            ->groupBy('notes.uploader_id')
             ->orderByDesc('avg_rating')
             ->first();
 
-        if (! $topUploader) {
-            $topUploader = User::select('users.*')
-                ->selectRaw('AVG(reviews.rating) as avg_rating')
-                ->join('notes', 'notes.uploader_id', '=', 'users.id')
-                ->join('reviews', 'reviews.note_id', '=', 'notes.id')
+        if (! $topUploaderRow) {
+            $topUploaderRow = Note::join('reviews', 'reviews.note_id', '=', 'notes.id')
                 ->where('reviews.is_hidden', false)
-                ->groupBy('users.id')
+                ->selectRaw('notes.uploader_id, AVG(reviews.rating) as avg_rating')
+                ->groupBy('notes.uploader_id')
                 ->orderByDesc('avg_rating')
                 ->first();
+        }
+
+        $topUploader = null;
+        if ($topUploaderRow) {
+            $topUploader = User::find($topUploaderRow->uploader_id);
+            $topUploader->avg_rating = $topUploaderRow->avg_rating;
         }
 
         return view($view, [
