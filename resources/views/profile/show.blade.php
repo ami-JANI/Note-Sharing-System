@@ -49,6 +49,26 @@
                 </div>
             </div>
 
+            {{-- Upload progress --}}
+            @php
+                $uploadCount = $notes->count();
+                $cycle = $uploadCount % 5;
+            @endphp
+            <div style="background: white; border: 1px solid rgba(27, 42, 74, 0.1); border-radius: 16px; padding: 24px 28px; margin-bottom: 28px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 16px; color: rgb(27, 42, 74);">Upload progress</span>
+                    <span style="font-size: 14px; font-weight: 600; color: {{ $cycle > 0 ? 'rgb(138, 28, 36)' : 'rgb(91, 104, 133)' }};">{{ $cycle }}/5</span>
+                </div>
+                <div style="width: 100%; height: 10px; background: rgba(27, 42, 74, 0.06); border-radius: 5px; overflow: hidden;">
+                    <div style="width: {{ ($cycle / 5) * 100 }}%; height: 100%; background: rgb(138, 28, 36); border-radius: 5px; transition: width 0.3s ease;"></div>
+                </div>
+                @if ($cycle === 0 && $uploadCount > 0)
+                    <p style="font-size: 13px; color: rgb(91, 104, 133); margin-top: 8px;">You have completed a cycle — keep uploading!</p>
+                @else
+                    <p style="font-size: 13px; color: rgb(91, 104, 133); margin-top: 8px;">{{ 5 - $cycle }} more {{ Str::plural('upload', 5 - $cycle) }} to complete this cycle.</p>
+                @endif
+            </div>
+
             {{-- My uploads --}}
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
                 <h3 style="font-family: 'Source Serif 4', serif; font-weight: 600; font-size: 20px; color: rgb(27, 42, 74);">My Uploaded Notes</h3>
