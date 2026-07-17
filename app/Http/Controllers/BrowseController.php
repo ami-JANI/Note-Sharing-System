@@ -58,23 +58,27 @@ class BrowseController extends Controller
 
         $visibleNotes = Note::where('status', 'approved')->where('hidden', false);
 
-        $topUploader = User::select('users.*')
+        $weeklyAvg = Review::select('notes.uploader_id')
             ->selectRaw('AVG(reviews.rating) as avg_rating')
-            ->join('notes', 'notes.uploader_id', '=', 'users.id')
-            ->join('reviews', 'reviews.note_id', '=', 'notes.id')
+            ->join('notes', 'notes.id', '=', 'reviews.note_id')
             ->where('reviews.is_hidden', false)
             ->where('reviews.created_at', '>=', now()->subDays(7))
-            ->groupBy('users.id')
+            ->groupBy('notes.uploader_id');
+
+        $topUploader = User::select('users.*', 'ratings.avg_rating')
+            ->joinSub($weeklyAvg, 'ratings', 'users.id', '=', 'ratings.uploader_id')
             ->orderByDesc('avg_rating')
             ->first();
 
         if (! $topUploader) {
-            $topUploader = User::select('users.*')
+            $allTimeAvg = Review::select('notes.uploader_id')
                 ->selectRaw('AVG(reviews.rating) as avg_rating')
-                ->join('notes', 'notes.uploader_id', '=', 'users.id')
-                ->join('reviews', 'reviews.note_id', '=', 'notes.id')
+                ->join('notes', 'notes.id', '=', 'reviews.note_id')
                 ->where('reviews.is_hidden', false)
-                ->groupBy('users.id')
+                ->groupBy('notes.uploader_id');
+
+            $topUploader = User::select('users.*', 'ratings.avg_rating')
+                ->joinSub($allTimeAvg, 'ratings', 'users.id', '=', 'ratings.uploader_id')
                 ->orderByDesc('avg_rating')
                 ->first();
         }
