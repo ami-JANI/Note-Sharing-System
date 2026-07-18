@@ -30,6 +30,8 @@ class NewReviewNotification extends Notification
             'note_title' => $this->note->title,
             'rating' => $this->review->rating,
             'reviewer_name' => $this->reviewer->name,
+            'message' => "{$this->reviewer->name} left a {$this->review->rating}-star review on \"{$this->note->title}\"",
+            'url' => route('notes.show', $this->note),
         ];
     }
 }

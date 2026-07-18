@@ -29,6 +29,8 @@ class NotePurchasedNotification extends Notification
             'note_title' => $this->note->title,
             'buyer_name' => $this->buyer->name,
             'credits_earned' => $this->creditsEarned,
+            'message' => "{$this->buyer->name} unlocked \"{$this->note->title}\" — you earned {$this->creditsEarned} credits",
+            'url' => route('notes.show', $this->note),
         ];
     }
 }
