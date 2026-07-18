@@ -25,11 +25,14 @@ class NewMessageNotification extends Notification
 
     public function toArray(object $notifiable): array
     {
+        $preview = mb_substr($this->message->body, 0, 100);
+
         return [
             'sender_id' => $this->sender->id,
             'sender_name' => $this->sender->name,
-            'preview' => mb_substr($this->message->body, 0, 100),
-            'link' => '/messages/'.$this->sender->id,
+            'preview' => $preview,
+            'message' => "{$this->sender->name}: {$preview}",
+            'url' => route('messages.show', $this->sender),
         ];
     }
 }

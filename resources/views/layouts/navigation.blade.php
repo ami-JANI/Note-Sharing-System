@@ -1,3 +1,6 @@
+@php
+    $hasUnreadMessages = auth()->check() && \App\Models\Message::where('recipient_id', auth()->id())->whereNull('read_at')->exists();
+@endphp
 <nav x-data="{ open: false }" style="background: rgba(251, 248, 243, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(27, 42, 74, 0.1);">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,8 +25,11 @@
                     <a href="{{ route('credits.buy') }}" style="font-size: 15px; font-weight: 500; color: {{ request()->routeIs('credits.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('credits.*') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
                         Buy Credits
                     </a>
-                    <a href="{{ route('messages.index') }}" style="font-size: 15px; font-weight: 500; color: {{ request()->routeIs('messages.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('messages.*') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
+                    <a href="{{ route('messages.index') }}" style="position: relative; font-size: 15px; font-weight: 500; color: {{ request()->routeIs('messages.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('messages.*') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
                         Messages
+                        @if ($hasUnreadMessages)
+                            <span style="position: absolute; top: -2px; right: -10px; width: 8px; height: 8px; border-radius: 50%; background: rgb(138, 28, 36);"></span>
+                        @endif
                     </a>
                     @if (auth()->user()?->isAdmin())
                         <a href="{{ route('admin.notes.pending') }}" style="font-size: 15px; font-weight: 500; color: {{ request()->routeIs('admin.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('admin.*') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
@@ -156,8 +162,11 @@
             <a href="{{ route('credits.buy') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('credits.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
                 Buy Credits
             </a>
-            <a href="{{ route('messages.index') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('messages.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
+            <a href="{{ route('messages.index') }}" class="block px-4 py-2 text-base font-medium" style="position: relative; color: {{ request()->routeIs('messages.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
                 Messages
+                @if ($hasUnreadMessages)
+                    <span style="position: absolute; top: 10px; left: 78px; width: 8px; height: 8px; border-radius: 50%; background: rgb(138, 28, 36);"></span>
+                @endif
             </a>
             @if (auth()->user()?->isAdmin())
                 <a href="{{ route('admin.notes.pending') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('admin.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
