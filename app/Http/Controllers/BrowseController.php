@@ -58,23 +58,27 @@ class BrowseController extends Controller
 
         $visibleNotes = Note::where('status', 'approved')->where('hidden', false);
 
-        // Aggregate on uploader_id only (not users.*) so this stays valid
-        // under MySQL's default ONLY_FULL_GROUP_BY mode -- selecting
-        // non-aggregated, non-grouped-by columns like users.name errors
-        // there even though SQLite (used in tests) silently allows it.
-        $topUploaderRow = Note::join('reviews', 'reviews.note_id', '=', 'notes.id')
+        $weeklyAvg = Review::select('notes.uploader_id')
+            ->selectRaw('AVG(reviews.rating) as avg_rating')
+            ->join('notes', 'notes.id', '=', 'reviews.note_id')
             ->where('reviews.is_hidden', false)
             ->where('reviews.created_at', '>=', now()->subDays(7))
-            ->selectRaw('notes.uploader_id, AVG(reviews.rating) as avg_rating')
-            ->groupBy('notes.uploader_id')
+            ->groupBy('notes.uploader_id');
+
+        $topUploader = User::select('users.*', 'ratings.avg_rating')
+            ->joinSub($weeklyAvg, 'ratings', 'users.id', '=', 'ratings.uploader_id')
             ->orderByDesc('avg_rating')
             ->first();
 
-        if (! $topUploaderRow) {
-            $topUploaderRow = Note::join('reviews', 'reviews.note_id', '=', 'notes.id')
+        if (! $topUploader) {
+            $allTimeAvg = Review::select('notes.uploader_id')
+                ->selectRaw('AVG(reviews.rating) as avg_rating')
+                ->join('notes', 'notes.id', '=', 'reviews.note_id')
                 ->where('reviews.is_hidden', false)
-                ->selectRaw('notes.uploader_id, AVG(reviews.rating) as avg_rating')
-                ->groupBy('notes.uploader_id')
+                ->groupBy('notes.uploader_id');
+
+            $topUploader = User::select('users.*', 'ratings.avg_rating')
+                ->joinSub($allTimeAvg, 'ratings', 'users.id', '=', 'ratings.uploader_id')
                 ->orderByDesc('avg_rating')
                 ->first();
         }
