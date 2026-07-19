@@ -83,6 +83,12 @@ class BrowseController extends Controller
                 ->first();
         }
 
+        $topUploader = null;
+        if ($topUploaderRow) {
+            $topUploader = User::find($topUploaderRow->uploader_id);
+            $topUploader->avg_rating = $topUploaderRow->avg_rating;
+        }
+
         return view($view, [
             'notes' => $notes,
             'topUploader' => $topUploader,

@@ -1,3 +1,6 @@
+@php
+    $hasUnreadMessages = auth()->check() && \App\Models\Message::where('recipient_id', auth()->id())->whereNull('read_at')->exists();
+@endphp
 <nav x-data="{ open: false }" style="background: rgba(251, 248, 243, 0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(27, 42, 74, 0.1);">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -22,8 +25,11 @@
                     <a href="{{ route('credits.buy') }}" style="font-size: 15px; font-weight: 500; color: {{ request()->routeIs('credits.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('credits.*') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
                         Buy Credits
                     </a>
-                    <a href="{{ route('messages.index') }}" style="font-size: 15px; font-weight: 500; color: {{ request()->routeIs('messages.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('messages.*') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
+                    <a href="{{ route('messages.index') }}" style="position: relative; font-size: 15px; font-weight: 500; color: {{ request()->routeIs('messages.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('messages.*') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
                         Messages
+                        @if ($hasUnreadMessages)
+                            <span style="position: absolute; top: -2px; right: -10px; width: 8px; height: 8px; border-radius: 50%; background: rgb(138, 28, 36);"></span>
+                        @endif
                     </a>
                     @if (auth()->user()?->isAdmin())
                         <a href="{{ route('admin.notes.pending') }}" style="font-size: 15px; font-weight: 500; color: {{ request()->routeIs('admin.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }}; {{ request()->routeIs('admin.*') ? 'border-bottom: 2px solid rgb(138, 28, 36); padding-bottom: 2px;' : '' }} transition">
@@ -48,15 +54,34 @@
                     $unreadNotifications = Auth::user()->unreadNotifications ?? collect();
                     $notifications = Auth::user()->notifications ?? collect();
                 @endphp
-                <div x-data="{ notifOpen: false }" class="relative">
-                    <button @click="notifOpen = !notifOpen"
+                <div x-data="{
+                        notifOpen: false,
+                        markAllRead() {
+                            fetch('{{ route('notifications.readAll') }}', {
+                                method: 'POST',
+                                headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' },
+                            });
+                            document.querySelectorAll('[data-notif-unread=\'1\']').forEach((row) => {
+                                row.style.background = 'transparent';
+                                row.onmouseout = () => { row.style.background = 'transparent'; };
+                                row.querySelectorAll('[data-notif-dot]').forEach((dot) => dot.remove());
+                                row.querySelectorAll('[data-notif-text]').forEach((text) => {
+                                    text.style.color = 'rgb(91, 104, 133)';
+                                    text.style.fontWeight = '400';
+                                });
+                                row.setAttribute('data-notif-unread', '0');
+                            });
+                            document.querySelectorAll('[data-notif-badge]').forEach((badge) => badge.remove());
+                        },
+                     }" class="relative">
+                    <button @click="notifOpen = !notifOpen; if (notifOpen) markAllRead()"
                             style="position: relative; display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; background: transparent; border: 1px solid rgba(27, 42, 74, 0.12); color: rgb(58, 71, 98); cursor: pointer; transition: all 0.15s;"
                             onmouseover="this.style.borderColor='rgba(27, 42, 74, 0.3)'" onmouseout="this.style.borderColor='rgba(27, 42, 74, 0.12)'">
                         <svg style="width: 18px; height: 18px;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                         </svg>
                         @if ($unreadNotifications->count() > 0)
-                            <span style="position: absolute; top: -4px; right: -4px; display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: rgb(138, 28, 36); color: white; font-size: 10px; font-weight: 700;">{{ $unreadNotifications->count() > 9 ? '9+' : $unreadNotifications->count() }}</span>
+                            <span data-notif-badge style="position: absolute; top: -4px; right: -4px; display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 9px; background: rgb(138, 28, 36); color: white; font-size: 10px; font-weight: 700;">{{ $unreadNotifications->count() > 9 ? '9+' : $unreadNotifications->count() }}</span>
                         @endif
                     </button>
 
@@ -74,6 +99,7 @@
 
                         @forelse ($notifications->take(10) as $notification)
                             <a href="{{ $notification->data['url'] ?? '#' }}"
+                               data-notif-unread="{{ $notification->read_at ? '0' : '1' }}"
                                style="display: flex; gap: 12px; padding: 12px 16px; text-decoration: none; color: rgb(27, 42, 74); border-bottom: 1px solid rgba(27, 42, 74, 0.04); transition: background 0.15s; {{ !$notification->read_at ? 'background: rgba(138, 28, 36, 0.03);' : '' }}"
                                onmouseover="this.style.background='rgba(27, 42, 74, 0.03)'" onmouseout="this.style.background='{{ !$notification->read_at ? 'rgba(138, 28, 36, 0.03)' : 'transparent' }}'">
                                 {{-- Icon per type --}}
@@ -89,11 +115,11 @@
                                     @endif
                                 </div>
                                 <div style="min-width: 0; flex: 1;">
-                                    <p style="font-size: 13px; line-height: 1.4; color: {{ !$notification->read_at ? 'rgb(27, 42, 74); font-weight: 500;' : 'rgb(91, 104, 133);' }}">{{ $notification->data['message'] ?? 'New notification' }}</p>
+                                    <p data-notif-text style="font-size: 13px; line-height: 1.4; color: {{ !$notification->read_at ? 'rgb(27, 42, 74); font-weight: 500;' : 'rgb(91, 104, 133);' }}">{{ $notification->data['message'] ?? 'New notification' }}</p>
                                     <p style="font-size: 11px; color: rgb(138, 150, 174); margin-top: 3px;">{{ $notification->created_at->diffForHumans() }}</p>
                                 </div>
                                 @if (!$notification->read_at)
-                                    <div style="width: 8px; height: 8px; border-radius: 50%; background: rgb(138, 28, 36); flex-shrink: 0; margin-top: 4px;"></div>
+                                    <div data-notif-dot style="width: 8px; height: 8px; border-radius: 50%; background: rgb(138, 28, 36); flex-shrink: 0; margin-top: 4px;"></div>
                                 @endif
                             </a>
                         @empty
@@ -156,8 +182,11 @@
             <a href="{{ route('credits.buy') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('credits.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
                 Buy Credits
             </a>
-            <a href="{{ route('messages.index') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('messages.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
+            <a href="{{ route('messages.index') }}" class="block px-4 py-2 text-base font-medium" style="position: relative; color: {{ request()->routeIs('messages.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
                 Messages
+                @if ($hasUnreadMessages)
+                    <span style="position: absolute; top: 10px; left: 78px; width: 8px; height: 8px; border-radius: 50%; background: rgb(138, 28, 36);"></span>
+                @endif
             </a>
             @if (auth()->user()?->isAdmin())
                 <a href="{{ route('admin.notes.pending') }}" class="block px-4 py-2 text-base font-medium" style="color: {{ request()->routeIs('admin.*') ? 'rgb(138, 28, 36)' : 'rgb(58, 71, 98)' }};">
